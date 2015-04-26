@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageEditor", "ImageEditor\ImageEditor.csproj", "{C6170C0C-2EBD-43AE-81A0-5C6FC434068C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageEditor.Tests", "ImageEditor\Tests\ImageEditor.Tests\ImageEditor.Tests.csproj", "{44FAE853-7C62-4FCC-8844-C1F6ABB6DA11}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C6170C0C-2EBD-43AE-81A0-5C6FC434068C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6170C0C-2EBD-43AE-81A0-5C6FC434068C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6170C0C-2EBD-43AE-81A0-5C6FC434068C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6170C0C-2EBD-43AE-81A0-5C6FC434068C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44FAE853-7C62-4FCC-8844-C1F6ABB6DA11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44FAE853-7C62-4FCC-8844-C1F6ABB6DA11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44FAE853-7C62-4FCC-8844-C1F6ABB6DA11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44FAE853-7C62-4FCC-8844-C1F6ABB6DA11}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
