@@ -174,8 +174,20 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Themes\Generic\images\" />
     <Folder Include="Themes\icons\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Themes\Generic\images\open.png" />
+    <Resource Include="Themes\Generic\images\redo.png" />
+    <Resource Include="Themes\Generic\images\redo_black.png" />
+    <Resource Include="Themes\Generic\images\save.png" />
+    <Resource Include="Themes\Generic\images\save_as.png" />
+    <Resource Include="Themes\Generic\images\undo.png" />
+    <Resource Include="Themes\Generic\images\undo_black.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Themes\Generic\images\crop.png" />
+    <Resource Include="Themes\Generic\images\crop_black.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
