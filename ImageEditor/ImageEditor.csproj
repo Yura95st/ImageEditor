@@ -73,6 +73,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\NumericUpDownSlider\NumericUpDownSlider.xaml.cs">
+      <DependentUpon>NumericUpDownSlider.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Utils\ExceptionHelper.cs" />
     <Compile Include="Utils\Guard.cs" />
     <Compile Include="ViewModels\LeftPanelViewModel.cs" />
@@ -101,6 +104,10 @@
       <DependentUpon>TopPanelView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Controls\NumericUpDownSlider\NumericUpDownSlider.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Themes\Generic\Converters.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
