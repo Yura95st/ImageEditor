@@ -3,5 +3,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              DispatcherUnhandledException="App_OnDispatcherUnhandledException"
              Startup="App_OnStartup">
-    <Application.Resources />
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/ImageEditor;component/Themes/Generic/Converters.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/ImageEditor;component/Themes/Generic/Styles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/ImageEditor;component/Themes/Generic/Theme.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+        </ResourceDictionary>
+    </Application.Resources>
 </Application>
