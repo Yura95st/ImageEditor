@@ -1,6 +1,6 @@
 ﻿namespace ImageEditor.ViewModels
 {
-    using ImageEditor.Commands;
+    using ImageEditor.Commands.Abstract;
     using ImageEditor.Utils;
 
     public class TopPanelViewModel

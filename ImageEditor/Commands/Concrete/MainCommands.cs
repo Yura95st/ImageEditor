@@ -1,9 +1,10 @@
-﻿namespace ImageEditor.Commands
+﻿namespace ImageEditor.Commands.Concrete
 {
     using System.Windows.Input;
 
     using GalaSoft.MvvmLight.Command;
 
+    using ImageEditor.Commands.Abstract;
     using ImageEditor.Utils;
     using ImageEditor.ViewModels;
 

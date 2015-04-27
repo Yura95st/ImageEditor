@@ -1,6 +1,6 @@
 ﻿namespace ImageEditor.ViewModels
 {
-    using ImageEditor.Commands;
+    using ImageEditor.Commands.Concrete;
 
     public class MainViewModel
     {

@@ -1,4 +1,4 @@
-﻿namespace ImageEditor.Commands
+﻿namespace ImageEditor.Commands.Abstract
 {
     using System.Windows.Input;
 
