@@ -1,6 +1,7 @@
 ﻿<UserControl x:Class="ImageEditor.Controls.NumericUpDownSlider.NumericUpDownSlider"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Name="MainControl"
              Loaded="OnLoaded">
 
     <Grid>
@@ -14,6 +15,8 @@
                 Grid.Column="0"
                 Height="22"
                 VerticalAlignment="Center"
+                IsEnabled="{Binding Path=IsEnabled,
+                                    ElementName=MainControl}"
                 IsSnapToTickEnabled="True"
                 Orientation="Horizontal"
                 ValueChanged="Slider_OnValueChanged" />
@@ -24,6 +27,8 @@
                  Height="22"
                  Margin="10,0,0,0"
                  GotFocus="TextBox_OnGotFocus"
+                 IsEnabled="{Binding Path=IsEnabled,
+                                     ElementName=MainControl}"
                  LostFocus="TextBox_OnLostFocus"
                  PreviewKeyDown="TextBox_OnPreviewKeyDown"
                  PreviewTextInput="TextBox_OnPreviewTextInput" />
@@ -33,23 +38,27 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            
+
             <RepeatButton x:Name="IncreaseButton"
                           Grid.Row="0"
                           Width="20"
                           Margin="0, 1, 2, 0"
-                          Click="IncreaseButton_OnClick">
+                          Click="IncreaseButton_OnClick"
+                          IsEnabled="{Binding Path=IsEnabled,
+                                              ElementName=MainControl}">
                 <Path Margin="1"
                       Data="M 0 20 L 35 -20 L 70 20 Z"
                       Fill="#202020"
                       Stretch="Uniform" />
             </RepeatButton>
-            
+
             <RepeatButton x:Name="DecreaseButton"
                           Grid.Row="1"
                           Width="20"
                           Margin="0, 0, 2, 1"
-                          Click="DecreaseButton_OnClick">
+                          Click="DecreaseButton_OnClick"
+                          IsEnabled="{Binding Path=IsEnabled,
+                                              ElementName=MainControl}">
                 <Path Margin="1"
                       Data="M 0 0 L 35 40 L 70 0 Z"
                       Fill="#202020"
