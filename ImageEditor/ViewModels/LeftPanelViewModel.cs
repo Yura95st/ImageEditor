@@ -2,7 +2,6 @@
 {
     using GalaSoft.MvvmLight;
 
-    using ImageEditor.Commands;
     using ImageEditor.Commands.Abstract;
     using ImageEditor.Utils;
 
@@ -18,23 +17,24 @@
 
         private int _rotationAngle;
 
-        public LeftPanelViewModel(ILeftPanelCommands commands)
+        public LeftPanelViewModel(ILeftPanelCommands commands, int minBrightness, int maxBrightness, int minContrast,
+                                  int maxContrast, int minOpacity, int maxOpacity, int minRotationAngle, int maxRotationAngle)
         {
             Guard.NotNull(commands, "commands");
 
             this._commands = commands;
 
-            this.MinBrightness = -100;
-            this.MaxBrightness = 100;
+            this.MinBrightness = (minBrightness > maxBrightness) ? maxBrightness : minBrightness;
+            this.MaxBrightness = maxBrightness;
 
-            this.MinContrast = -100;
-            this.MaxContrast = 100;
+            this.MinContrast = (minContrast > maxContrast) ? maxContrast : minContrast;
+            this.MaxContrast = maxContrast;
 
-            this.MinOpacity = 0;
-            this.MaxOpacity = 100;
+            this.MinOpacity = (minOpacity > maxOpacity) ? maxOpacity : minOpacity;
+            this.MaxOpacity = maxOpacity;
 
-            this.MinRotationAngle = -180;
-            this.MaxRotationAngle = 180;
+            this.MinRotationAngle = (minRotationAngle > maxRotationAngle) ? maxRotationAngle : minRotationAngle;
+            this.MaxRotationAngle = maxRotationAngle;
 
             this.Brightness = 0;
             this.Contrast = 0;

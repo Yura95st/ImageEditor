@@ -1,14 +1,20 @@
 ﻿namespace ImageEditor.ViewModels
 {
     using ImageEditor.Commands.Concrete;
+    using ImageEditor.Components.ImageProcessor.Abstract;
+    using ImageEditor.Components.ImageProcessor.Concrete;
 
     public class MainViewModel
     {
         private readonly MainCommands _commands;
 
+        private readonly IImageProcessor _imageProcessor;
+
         public MainViewModel()
         {
             this._commands = new MainCommands(this);
+
+            this._imageProcessor = new ImageProcessor();
 
             this.InitViewModels();
         }
@@ -54,7 +60,7 @@
 
         public bool CanChangeRotationAngle()
         {
-            return true;
+            return false;
         }
 
         public bool CanCrop()
@@ -136,8 +142,11 @@
         {
             this.EditorViewModel = new EditorViewModel();
             this.FooterViewModel = new FooterViewModel();
-            this.LeftPanelViewModel = new LeftPanelViewModel(this._commands);
             this.TopPanelViewModel = new TopPanelViewModel(this._commands);
+
+            this.LeftPanelViewModel = new LeftPanelViewModel(this._commands, ImageProcessor.MinBrightness,
+            ImageProcessor.MaxBrightness, ImageProcessor.MinContrast, ImageProcessor.MaxContrast, ImageProcessor.MinOpacity,
+            ImageProcessor.MaxOpacity, ImageProcessor.MinRotationAngle, ImageProcessor.MaxRotationAngle);
         }
     }
 }
