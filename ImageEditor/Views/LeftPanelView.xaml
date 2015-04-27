@@ -3,6 +3,69 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:numericUpDownSlider="clr-namespace:ImageEditor.Controls.NumericUpDownSlider"
              mc:Ignorable="d">
-    <Grid />
+
+    <Border Margin="5,5"
+            BorderBrush="{StaticResource LeftPanelBorderBrush}"
+            BorderThickness="1,1">
+
+        <Grid Width="220">
+            <StackPanel Margin="5,5">
+
+                <TextBlock Margin="0,0,0,10" Text="Brightness" />
+
+                <numericUpDownSlider:NumericUpDownSlider Margin="0,0,0,10"
+                                                         IsEnabled="{Binding CanChangeBrightness,
+                                                                             Mode=OneWay}"
+                                                         Maximum="{Binding MaxBrightness,
+                                                                           Mode=OneTime}"
+                                                         Minimum="{Binding MinBrightness,
+                                                                           Mode=OneTime}"
+                                                         TickFrequency="1"
+                                                         Value="{Binding Brightness,
+                                                                         Mode=TwoWay}" />
+
+                <TextBlock Margin="0,0,0,10" Text="Contrast" />
+
+                <numericUpDownSlider:NumericUpDownSlider Margin="0,0,0,10"
+                                                         IsEnabled="{Binding CanChangeContrast,
+                                                                             Mode=OneWay}"
+                                                         Maximum="{Binding MaxContrast,
+                                                                           Mode=OneTime}"
+                                                         Minimum="{Binding MinContrast,
+                                                                           Mode=OneTime}"
+                                                         TickFrequency="1"
+                                                         Value="{Binding Contrast,
+                                                                         Mode=TwoWay}" />
+
+                <TextBlock Margin="0,0,0,10" Text="Opacity" />
+
+                <numericUpDownSlider:NumericUpDownSlider Margin="0,0,0,10"
+                                                         IsEnabled="{Binding CanChangeOpacity,
+                                                                             Mode=OneWay}"
+                                                         Maximum="{Binding MaxOpacity,
+                                                                           Mode=OneTime}"
+                                                         Minimum="{Binding MinOpacity,
+                                                                           Mode=OneTime}"
+                                                         TickFrequency="1"
+                                                         Value="{Binding Opacity,
+                                                                         Mode=TwoWay}" />
+
+                <TextBlock Margin="0,0,0,10" Text="Rotation Angle" />
+
+                <numericUpDownSlider:NumericUpDownSlider Margin="0,0,0,10"
+                                                         IsEnabled="{Binding CanChangeRotationAngle,
+                                                                             Mode=OneWay}"
+                                                         Maximum="{Binding MaxRotationAngle,
+                                                                           Mode=OneTime}"
+                                                         Minimum="{Binding MinRotationAngle,
+                                                                           Mode=OneTime}"
+                                                         TickFrequency="1"
+                                                         Value="{Binding RotationAngle,
+                                                                         Mode=TwoWay}" />
+            </StackPanel>
+        </Grid>
+
+    </Border>
 </UserControl>

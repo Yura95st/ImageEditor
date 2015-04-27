@@ -136,7 +136,7 @@
         {
             this.EditorViewModel = new EditorViewModel();
             this.FooterViewModel = new FooterViewModel();
-            this.LeftPanelViewModel = new LeftPanelViewModel();
+            this.LeftPanelViewModel = new LeftPanelViewModel(this._commands);
             this.TopPanelViewModel = new TopPanelViewModel(this._commands);
         }
     }
