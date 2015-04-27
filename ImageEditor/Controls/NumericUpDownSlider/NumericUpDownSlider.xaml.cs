@@ -13,11 +13,11 @@
         public static DependencyProperty MinimumProperty = DependencyProperty.Register("Minimum", typeof(double),
         typeof(NumericUpDownSlider), new PropertyMetadata(0.0));
 
-        public static DependencyProperty TickFrequencyProperty = DependencyProperty.Register("TickFrequency",
-        typeof(double), typeof(NumericUpDownSlider), new PropertyMetadata(1.0));
+        public static DependencyProperty TickFrequencyProperty = DependencyProperty.Register("TickFrequency", typeof(double),
+        typeof(NumericUpDownSlider), new PropertyMetadata(1.0));
 
         public static DependencyProperty ValueProperty = DependencyProperty.Register("Value", typeof(double),
-        typeof(NumericUpDownSlider), new PropertyMetadata(0.0));
+        typeof(NumericUpDownSlider), new PropertyMetadata(0.0, NumericUpDownSlider.ValueChangedCallback));
 
         public NumericUpDownSlider()
         {
@@ -173,6 +173,16 @@
             if (this.Minimum > this.Maximum)
             {
                 this.Minimum = this.Maximum;
+            }
+        }
+
+        private static void ValueChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
+        {
+            NumericUpDownSlider _numericUpDownSlider = dependencyObject as NumericUpDownSlider;
+
+            if (_numericUpDownSlider != null)
+            {
+                _numericUpDownSlider.Value = (double)e.NewValue;
             }
         }
     }
