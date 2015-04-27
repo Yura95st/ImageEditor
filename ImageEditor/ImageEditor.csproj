@@ -73,6 +73,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Commands\ILeftPanelCommands.cs" />
+    <Compile Include="Commands\IMainCommands.cs" />
     <Compile Include="Controls\NumericUpDownSlider\NumericUpDownSlider.xaml.cs">
       <DependentUpon>NumericUpDownSlider.xaml</DependentUpon>
     </Compile>
