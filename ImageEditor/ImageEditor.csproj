@@ -192,9 +192,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Themes\icons\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Resource Include="Themes\Generic\images\open.png" />
     <Resource Include="Themes\Generic\images\redo.png" />
@@ -206,6 +204,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Themes\Generic\images\crop.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Themes\icons\image_editor_icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

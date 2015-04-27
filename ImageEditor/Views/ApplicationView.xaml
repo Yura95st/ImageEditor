@@ -5,7 +5,8 @@
         Title="Image Editor"
         MinWidth="900"
         MinHeight="510"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        Icon="/Themes/icons/image_editor_icon.ico">
     <Grid>
         <views:MainView DataContext="{Binding MainViewModel}" />
     </Grid>
