@@ -6,6 +6,7 @@
     using System.Windows.Threading;
 
     using ImageEditor.Utils;
+    using ImageEditor.ViewModels;
     using ImageEditor.Views;
 
     /// <summary>
@@ -13,6 +14,8 @@
     /// </summary>
     public partial class App : Application
     {
+        private ApplicationViewModel _applicationViewModel;
+
         private void App_OnDispatcherUnhandledException(object sender,
                                                         DispatcherUnhandledExceptionEventArgs
                                                         dispatcherUnhandledExceptionEventArgs)
@@ -50,7 +53,9 @@
 
         private void App_OnStartup(object sender, StartupEventArgs e)
         {
-            ApplicationView applicationView = new ApplicationView();
+            this._applicationViewModel = new ApplicationViewModel();
+
+            ApplicationView applicationView = new ApplicationView { DataContext = this._applicationViewModel };
 
             applicationView.Show();
         }
