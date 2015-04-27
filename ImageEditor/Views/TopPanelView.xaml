@@ -4,5 +4,52 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d">
-    <Grid />
+
+    <Grid>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0"
+                        Height="40"
+                        Margin="5,0"
+                        Orientation="Horizontal">
+
+                <Button Command="{Binding Commands.OpenCommand}"
+                        Content="Open"
+                        Style="{StaticResource OpenTopPanelButton}"
+                        ToolTip="Open (Ctrl+O)" />
+
+                <Button Command="{Binding Commands.SaveCommand}"
+                        Content="Save"
+                        Style="{StaticResource SaveTopPanelButton}"
+                        ToolTip="Save (Ctrl+S)" />
+
+                <Button Command="{Binding Commands.SaveAsCommand}"
+                        Content="Save As"
+                        Style="{StaticResource SaveAsTopPanelButton}"
+                        ToolTip="Save As (Ctrl+Shift+S)" />
+
+                <Border Style="{StaticResource TopPanelDivider}" />
+
+                <Button Command="{Binding Commands.UndoCommand}"
+                        Content="Undo"
+                        Style="{StaticResource UndoTopPanelButton}"
+                        ToolTip="Undo (Ctrl+Z)" />
+
+                <Button Command="{Binding Commands.RedoCommand}"
+                        Content="Redo"
+                        Style="{StaticResource RedoTopPanelButton}"
+                        ToolTip="Redo (Ctrl+Y)" />
+
+                <Border Style="{StaticResource TopPanelDivider}" />
+
+                <Button Command="{Binding Commands.CropCommand}"
+                        Content="Crop"
+                        Style="{StaticResource CropTopPanelButton}"
+                        ToolTip="Crop" />
+            </StackPanel>
+        </Grid>
+    </Grid>
 </UserControl>
