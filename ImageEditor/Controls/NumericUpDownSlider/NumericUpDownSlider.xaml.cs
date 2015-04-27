@@ -95,12 +95,12 @@
 
         private void DecreaseButton_OnClick(object sender, RoutedEventArgs e)
         {
-            this.Value--;
+            this.Value -= this._tickFrequency;
         }
 
         private void IncreaseButton_OnClick(object sender, RoutedEventArgs e)
         {
-            this.Value++;
+            this.Value += this._tickFrequency;
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)
