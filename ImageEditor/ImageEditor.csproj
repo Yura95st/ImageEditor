@@ -79,6 +79,12 @@
     <Compile Include="Commands\Concrete\MainCommands.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Components\ImageProcessor\Abstract\IImageProcessor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Components\ImageProcessor\Concrete\ImageProcessor.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Controls\NumericUpDownSlider\NumericUpDownSlider.xaml.cs">
       <DependentUpon>NumericUpDownSlider.xaml</DependentUpon>
     </Compile>
