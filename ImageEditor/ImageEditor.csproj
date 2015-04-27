@@ -76,6 +76,9 @@
     <Compile Include="Commands\ITopPanelCommands.cs" />
     <Compile Include="Commands\ILeftPanelCommands.cs" />
     <Compile Include="Commands\IMainCommands.cs" />
+    <Compile Include="Commands\MainCommands.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Controls\NumericUpDownSlider\NumericUpDownSlider.xaml.cs">
       <DependentUpon>NumericUpDownSlider.xaml</DependentUpon>
     </Compile>
