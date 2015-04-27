@@ -4,5 +4,41 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d">
-    <Grid />
+
+    <Grid Height="25"
+          VerticalAlignment="Center"
+          Background="{StaticResource FooterBackgroundBrush}">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Column="0"
+                    Margin="0,0,5,0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal">
+
+            <TextBlock Width="20"
+                       Foreground="{StaticResource FooterForeroundBrush}"
+                       Text="{Binding Path=Value,
+                                      ElementName=ZoomSlider,
+                                      Mode=OneWay}"
+                       TextAlignment="Right" />
+
+            <TextBlock Margin="0,0,10,0" Foreground="{StaticResource FooterForeroundBrush}">%</TextBlock>
+
+            <Slider x:Name="ZoomSlider"
+                    Width="100"
+                    VerticalAlignment="Center"
+                    IsSnapToTickEnabled="True"
+                    Maximum="{Binding ScaleMax}"
+                    Minimum="{Binding ScaleMin}"
+                    Orientation="Horizontal"
+                    Style="{StaticResource SimpleSlider}"
+                    TickFrequency="{Binding ScaleStep}"
+                    Value="{Binding Path=ScaleValue,
+                                    Mode=TwoWay}" />
+        </StackPanel>
+    </Grid>
 </UserControl>
