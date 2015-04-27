@@ -7,49 +7,50 @@
 
     public partial class NumericUpDownSlider : UserControl
     {
-        public static readonly DependencyProperty ValueProperty = DependencyProperty.Register("Value", typeof(double),
+        public static DependencyProperty MaximumProperty = DependencyProperty.Register("Maximum", typeof(double),
+        typeof(NumericUpDownSlider), new PropertyMetadata(100.0));
+
+        public static DependencyProperty MinimumProperty = DependencyProperty.Register("Minimum", typeof(double),
         typeof(NumericUpDownSlider), new PropertyMetadata(0.0));
 
-        private double _maximun;
+        public static DependencyProperty TickFrequencyProperty = DependencyProperty.Register("TickFrequency",
+        typeof(double), typeof(NumericUpDownSlider), new PropertyMetadata(1.0));
 
-        private double _minimun;
-
-        private double _tickFrequency;
+        public static DependencyProperty ValueProperty = DependencyProperty.Register("Value", typeof(double),
+        typeof(NumericUpDownSlider), new PropertyMetadata(0.0));
 
         public NumericUpDownSlider()
         {
             this.InitializeComponent();
-
-            this.Minimun = 0.0;
-            this.Maximun = 100.0;
-            this.TickFrequency = 1.0;
         }
 
-        public double Maximun
+        public double Maximum
         {
             get
             {
-                return this._maximun;
+                return (double)this.GetValue(NumericUpDownSlider.MaximumProperty);
             }
             set
             {
-                this._maximun = value;
+                this.SetValue(NumericUpDownSlider.MaximumProperty, value);
 
-                this.Slider.Maximum = this._maximun;
+                this.ValidateMinAndMaxValues();
+                this.UpdateSliderAndTextBoxValues();
             }
         }
 
-        public double Minimun
+        public double Minimum
         {
             get
             {
-                return this._minimun;
+                return (double)this.GetValue(NumericUpDownSlider.MinimumProperty);
             }
             set
             {
-                this._minimun = value;
+                this.SetValue(NumericUpDownSlider.MinimumProperty, value);
 
-                this.Slider.Minimum = this._minimun;
+                this.ValidateMinAndMaxValues();
+                this.UpdateSliderAndTextBoxValues();
             }
         }
 
@@ -57,13 +58,13 @@
         {
             get
             {
-                return this._tickFrequency;
+                return (double)this.GetValue(NumericUpDownSlider.TickFrequencyProperty);
             }
             set
             {
-                this._tickFrequency = (value > 0) ? value : 1.0;
+                this.SetValue(NumericUpDownSlider.TickFrequencyProperty, value);
 
-                this.Slider.TickFrequency = this._tickFrequency;
+                this.UpdateSliderAndTextBoxValues();
             }
         }
 
@@ -75,13 +76,13 @@
             }
             set
             {
-                if (value > this._maximun)
+                if (value > this.Maximum)
                 {
-                    this.SetValue(NumericUpDownSlider.ValueProperty, this._maximun);
+                    this.SetValue(NumericUpDownSlider.ValueProperty, this.Maximum);
                 }
-                else if (value < this._minimun)
+                else if (value < this.Minimum)
                 {
-                    this.SetValue(NumericUpDownSlider.ValueProperty, this._minimun);
+                    this.SetValue(NumericUpDownSlider.ValueProperty, this.Minimum);
                 }
                 else
                 {
@@ -95,12 +96,12 @@
 
         private void DecreaseButton_OnClick(object sender, RoutedEventArgs e)
         {
-            this.Value -= this._tickFrequency;
+            this.Value -= this.TickFrequency;
         }
 
         private void IncreaseButton_OnClick(object sender, RoutedEventArgs e)
         {
-            this.Value += this._tickFrequency;
+            this.Value += this.TickFrequency;
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)
@@ -152,12 +153,16 @@
 
         private void UpdateIncreaseDecreaseButtons()
         {
-            this.IncreaseButton.IsEnabled = this.Value < this._maximun;
-            this.DecreaseButton.IsEnabled = this.Value > this._minimun;
+            this.IncreaseButton.IsEnabled = this.Value < this.Maximum;
+            this.DecreaseButton.IsEnabled = this.Value > this.Minimum;
         }
 
         private void UpdateSliderAndTextBoxValues()
         {
+            this.Slider.Maximum = this.Maximum;
+            this.Slider.Minimum = this.Minimum;
+            this.Slider.TickFrequency = this.TickFrequency;
+
             this.Slider.Value = this.Value;
 
             this.TextBox.Text = this.Value.ToString();
@@ -165,9 +170,9 @@
 
         private void ValidateMinAndMaxValues()
         {
-            if (this._minimun > this._maximun)
+            if (this.Minimum > this.Maximum)
             {
-                this.Minimun = this._maximun;
+                this.Minimum = this.Maximum;
             }
         }
     }
