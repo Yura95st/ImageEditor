@@ -1,5 +1,7 @@
 ﻿namespace ImageEditor.ViewModels
 {
+    using System;
+
     using GalaSoft.MvvmLight;
 
     using ImageEditor.Commands.Abstract;
@@ -23,6 +25,8 @@
             Guard.NotNull(commands, "commands");
 
             this._commands = commands;
+
+            this.SubscribeToCommandsCanExecuteChanged();
 
             this.MinBrightness = (minBrightness > maxBrightness) ? maxBrightness : minBrightness;
             this.MaxBrightness = maxBrightness;
@@ -232,6 +236,47 @@
                     this.RaisePropertyChanged(() => this.RotationAngle);
                 }
             }
+        }
+
+        private void ChangeBrightnessCommandOnCanExecuteChanged(object sender, EventArgs eventArgs)
+        {
+            this.RaisePropertyChanged(() => this.CanChangeBrightness);
+        }
+
+        private void ChangeContrastCommandOnCanExecuteChanged(object sender, EventArgs eventArgs)
+        {
+            this.RaisePropertyChanged(() => this.CanChangeContrast);
+        }
+
+        private void ChangeOpacityCommandOnCanExecuteChanged(object sender, EventArgs eventArgs)
+        {
+            this.RaisePropertyChanged(() => this.CanChangeOpacity);
+        }
+
+        private void ChangeRotationAngleCommandOnCanExecuteChanged(object sender, EventArgs eventArgs)
+        {
+            this.RaisePropertyChanged(() => this.CanChangeRotationAngle);
+        }
+
+        private void SubscribeToCommandsCanExecuteChanged()
+        {
+            this._commands.ChangeBrightnessCommand.CanExecuteChanged += this.ChangeBrightnessCommandOnCanExecuteChanged;
+            this._commands.ChangeContrastCommand.CanExecuteChanged += this.ChangeContrastCommandOnCanExecuteChanged;
+            this._commands.ChangeOpacityCommand.CanExecuteChanged += this.ChangeOpacityCommandOnCanExecuteChanged;
+            this._commands.ChangeRotationAngleCommand.CanExecuteChanged += this.ChangeRotationAngleCommandOnCanExecuteChanged;
+        }
+
+        private void UnsubscribeToCommandsCanExecuteChanged()
+        {
+            this._commands.ChangeBrightnessCommand.CanExecuteChanged -= this.ChangeBrightnessCommandOnCanExecuteChanged;
+            this._commands.ChangeContrastCommand.CanExecuteChanged -= this.ChangeContrastCommandOnCanExecuteChanged;
+            this._commands.ChangeOpacityCommand.CanExecuteChanged -= this.ChangeOpacityCommandOnCanExecuteChanged;
+            this._commands.ChangeRotationAngleCommand.CanExecuteChanged -= this.ChangeRotationAngleCommandOnCanExecuteChanged;
+        }
+
+        ~LeftPanelViewModel()
+        {
+            this.UnsubscribeToCommandsCanExecuteChanged();
         }
     }
 }
