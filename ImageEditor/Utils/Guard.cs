@@ -23,6 +23,19 @@
         }
 
         /// <summary>
+        ///     Throws <see cref="ArgumentOutOfRangeException" /> if the given argument is less or equal to zero.
+        /// </summary>
+        /// <param name="argumentValue">The argument value to test.</param>
+        /// <param name="argumentName">The name of the argument to test.</param>
+        public static void GreaterThanZero(double argumentValue, string argumentName)
+        {
+            if (argumentValue <= 0)
+            {
+                throw new ArgumentOutOfRangeException("The argument must be greater than 0.", argumentName);
+            }
+        }
+
+        /// <summary>
         ///     Throws <see cref="ArgumentNullException" /> if the given argument is null.
         /// </summary>
         /// <exception cref="ArgumentNullException">The value is null.</exception>

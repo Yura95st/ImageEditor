@@ -8,6 +8,36 @@
     public class GuardTests
     {
         [Test]
+        public void GreaterThanZero_ArgumentValueIsEqualToZero_ThrowsArgumentOutOfRangeException()
+        {
+            // Arrange
+            String argumentName = "someArgumentName";
+
+            // Act & Assert
+            Assert.Throws<ArgumentOutOfRangeException>(() => ImageEditor.Utils.Guard.GreaterThanZero(0.0, argumentName));
+        }
+
+        [Test]
+        public void GreaterThanZero_ArgumentValueIsGreaterThanZero_DoesNotThrowAnyException()
+        {
+            // Arrange
+            String argumentName = "someArgumentName";
+
+            // Act & Assert
+            ImageEditor.Utils.Guard.GreaterThanZero(1.0, argumentName);
+        }
+
+        [Test]
+        public void GreaterThanZero_ArgumentValueIsLessThanZero_ThrowsArgumentOutOfRangeException()
+        {
+            // Arrange
+            String argumentName = "someArgumentName";
+
+            // Act & Assert
+            Assert.Throws<ArgumentOutOfRangeException>(() => ImageEditor.Utils.Guard.GreaterThanZero(-1.0, argumentName));
+        }
+
+        [Test]
         public void IntNonNegative_ArgumentValueIsGreaterOrEqualToZero_DoesNotThrowAnyException()
         {
             // Arrange
