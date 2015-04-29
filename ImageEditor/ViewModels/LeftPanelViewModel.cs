@@ -40,10 +40,7 @@
             this.MinRotationAngle = (minRotationAngle > maxRotationAngle) ? maxRotationAngle : minRotationAngle;
             this.MaxRotationAngle = maxRotationAngle;
 
-            this.Brightness = 0;
-            this.Contrast = 0;
-            this.Opacity = 0;
-            this.RotationAngle = 0;
+            this.ResetToDefaults();
         }
 
         public int Brightness
@@ -236,6 +233,14 @@
                     this.RaisePropertyChanged(() => this.RotationAngle);
                 }
             }
+        }
+
+        public void ResetToDefaults()
+        {
+            this.Brightness = 0;
+            this.Contrast = 0;
+            this.Opacity = 0;
+            this.RotationAngle = 0;
         }
 
         private void ChangeBrightnessCommandOnCanExecuteChanged(object sender, EventArgs eventArgs)

@@ -1,8 +1,15 @@
 ﻿namespace ImageEditor.ViewModels
 {
+    using System;
+    using System.IO;
+    using System.Windows.Media.Imaging;
+
+    using GalaSoft.MvvmLight.Messaging;
+
     using ImageEditor.Commands.Concrete;
     using ImageEditor.Components.ImageProcessor.Abstract;
     using ImageEditor.Components.ImageProcessor.Concrete;
+    using ImageEditor.Messages;
 
     public class MainViewModel
     {
@@ -10,11 +17,15 @@
 
         private readonly IImageProcessor _imageProcessor;
 
+        private BitmapSource _openedImage;
+
         public MainViewModel()
         {
             this._commands = new MainCommands(this);
 
             this._imageProcessor = new ImageProcessor();
+
+            this._openedImage = null;
 
             this.InitViewModels();
         }
@@ -55,7 +66,7 @@
 
         public bool CanChangeOpacity()
         {
-            return false;
+            return this.IsImageOpened();
         }
 
         public bool CanChangeRotationAngle()
@@ -100,7 +111,8 @@
 
         public void ChangeOpacity()
         {
-            throw new System.NotImplementedException();
+            this.EditorViewModel.Image = this._imageProcessor.ChangeOpacity(this._openedImage,
+            this.LeftPanelViewModel.Opacity);
         }
 
         public void ChangeRotationAngle()
@@ -115,7 +127,34 @@
 
         public void Open()
         {
-            throw new System.NotImplementedException();
+            OpenImageMessage message = new OpenImageMessage(this, imageFilePath =>
+            {
+                if (!string.IsNullOrEmpty(imageFilePath))
+                {
+                    try
+                    {
+                        this._openedImage = new BitmapImage(new Uri(imageFilePath, UriKind.Absolute));
+
+                        this.EditorViewModel.Image = this._openedImage;
+
+                        this.LeftPanelViewModel.ResetToDefaults();
+                    }
+                    catch (FileNotFoundException)
+                    {
+                        Messenger.Default.Send(new ErrorMessage(this,
+                        string.Format("{0}{1}File is not found.", imageFilePath, Environment.NewLine)));
+                    }
+                    catch
+                    {
+                        Messenger.Default.Send(new ErrorMessage(this,
+                        string.Format(
+                        "{0}{1}ImageEditor can't read this file.{1}This is not a valid bitmap file or its format is not currently supported.",
+                        imageFilePath, Environment.NewLine)));
+                    }
+                }
+            });
+
+            Messenger.Default.Send(message);
         }
 
         public void Redo()
@@ -147,6 +186,13 @@
             this.LeftPanelViewModel = new LeftPanelViewModel(this._commands, ImageProcessor.MinBrightness,
             ImageProcessor.MaxBrightness, ImageProcessor.MinContrast, ImageProcessor.MaxContrast, ImageProcessor.MinOpacity,
             ImageProcessor.MaxOpacity, ImageProcessor.MinRotationAngle, ImageProcessor.MaxRotationAngle);
+        }
+
+        private bool IsImageOpened()
+        {
+            bool result = this._openedImage != null;
+
+            return result;
         }
     }
 }
