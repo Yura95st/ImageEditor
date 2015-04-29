@@ -62,7 +62,7 @@
                 throw new ArgumentOutOfRangeException("newOpacity", "Opacity must be between 0 and 100.");
             }
 
-            int pixelsCount = (int)image.Width * (int)image.Height;
+            int pixelsCount = image.PixelWidth * image.PixelHeight;
 
             int[] pixels = new int[pixelsCount];
 
@@ -74,10 +74,10 @@
 
             for (int i = 0; i < pixelsCount; i++)
             {
-                int red = (pixels[i] >> 16) & 0xff;
-                int green = (pixels[i] >> 8) & 0xff;
-                int blue = pixels[i] & 0xff;
-                int alpha = (255 - coef) & 0xff;
+                int red = (pixels[i] >> 16) & 255;
+                int green = (pixels[i] >> 8) & 255;
+                int blue = pixels[i] & 255;
+                int alpha = (255 - coef) & 255;
 
                 int color = (alpha << 24) + (red << 16) + (green << 8) + blue;
 
