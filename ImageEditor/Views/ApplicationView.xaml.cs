@@ -38,7 +38,9 @@
             {
                 CheckPathExists = true, ValidateNames = true,
                 Filter =
-                    string.Format("Image files ({0})|{0}|All files|*", "*.bmp, *.gif, *.jpg, *.jpeg, *.png, *.tif, *.tiff")
+                    string.Format(
+                    "Image files ({0}, {1}, {2}, {3}, {4}, {5}, {6})|{0};{1};{2};{3};{4};{5};{6}|All files (*.*)|*.*",
+                    "*.bmp", "*.gif", "*.jpg", "*.jpeg", "*.png", "*.tif", "*.tiff")
             };
 
             bool? result = openFileDialog.ShowDialog();
