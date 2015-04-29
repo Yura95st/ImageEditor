@@ -1,9 +1,12 @@
 ﻿namespace ImageEditor.Components.ImageProcessor.Concrete
 {
+    using System;
     using System.Windows;
+    using System.Windows.Media;
     using System.Windows.Media.Imaging;
 
     using ImageEditor.Components.ImageProcessor.Abstract;
+    using ImageEditor.Utils;
 
     public class ImageProcessor : IImageProcessor
     {
@@ -52,12 +55,71 @@
 
         public BitmapSource ChangeOpacity(BitmapSource image, int newOpacity)
         {
-            throw new System.NotImplementedException();
+            Guard.NotNull(image, "image");
+
+            if (newOpacity < 0 || newOpacity > 100)
+            {
+                throw new ArgumentOutOfRangeException("newOpacity", "Opacity must be between 0 and 100.");
+            }
+
+            int pixelsCount = (int)image.Width * (int)image.Height;
+
+            int[] pixels = new int[pixelsCount];
+
+            int stride = (image.PixelWidth * image.Format.BitsPerPixel + 7) / 8;
+
+            int coef = (int)(2.55 * newOpacity);
+
+            image.CopyPixels(pixels, stride, 0);
+
+            for (int i = 0; i < pixelsCount; i++)
+            {
+                int red = (pixels[i] >> 16) & 0xff;
+                int green = (pixels[i] >> 8) & 0xff;
+                int blue = pixels[i] & 0xff;
+                int alpha = (255 - coef) & 0xff;
+
+                int color = (alpha << 24) + (red << 16) + (green << 8) + blue;
+
+                pixels[i] = color;
+            }
+
+            BitmapSource result = BitmapSource.Create(image.PixelWidth, image.PixelHeight, image.DpiX, image.DpiY,
+            PixelFormats.Bgra32, image.Palette, pixels, stride);
+
+            return result;
         }
 
-        public BitmapSource Crop(BitmapSource image, Point leftTopCornerPoint, int width, int height)
+        public BitmapSource Crop(BitmapSource image, Point leftTopCornerPoint, double width, double height)
         {
-            throw new System.NotImplementedException();
+            Guard.NotNull(image, "image");
+            Guard.GreaterThanZero(width, "width");
+            Guard.GreaterThanZero(height, "height");
+
+            if (leftTopCornerPoint.X < 0 || leftTopCornerPoint.Y < 0 || leftTopCornerPoint.X > image.Width
+            || leftTopCornerPoint.Y > image.Height)
+            {
+                throw new ArgumentOutOfRangeException("leftTopCornerPoint",
+                "LeftTopCornerPoint must be within the boundaries of the image.");
+            }
+
+            double maxWidth = image.Width - leftTopCornerPoint.X;
+            double maxHeight = image.Height - leftTopCornerPoint.Y;
+
+            if (width > maxWidth)
+            {
+                width = maxWidth;
+            }
+
+            if (height > maxHeight)
+            {
+                height = maxHeight;
+            }
+
+            CroppedBitmap result = new CroppedBitmap(image,
+            new Int32Rect((int)leftTopCornerPoint.X, (int)leftTopCornerPoint.Y, (int)height, (int)width));
+
+            return result;
         }
 
         public BitmapSource Rotate(BitmapSource image, int angle)

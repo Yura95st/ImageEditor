@@ -11,7 +11,7 @@
 
         BitmapSource ChangeOpacity(BitmapSource image, int newOpacity);
 
-        BitmapSource Crop(BitmapSource image, Point leftTopCornerPoint, int width, int height);
+        BitmapSource Crop(BitmapSource image, Point leftTopCornerPoint, double width, double height);
 
         BitmapSource Rotate(BitmapSource image, int angle);
     }
