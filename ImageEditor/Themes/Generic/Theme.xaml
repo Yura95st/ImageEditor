@@ -10,8 +10,17 @@
     <SolidColorBrush x:Key="FooterForeroundBrush" Color="#FFFFFF" />
 
     <SolidColorBrush x:Key="LeftPanelBorderBrush" Color="#D2D4DF" />
-    
+
     <SolidColorBrush x:Key="EditorBorderBrush" Color="#D2D4DF" />
+
+    <ImageBrush x:Key="EditorImageGridBackgroundBrush"
+                AlignmentX="Left"
+                AlignmentY="Top"
+                ImageSource="images/image_background.png"
+                Stretch="Uniform"
+                TileMode="Tile"
+                Viewport="0,0,16,16"
+                ViewportUnits="Absolute" />
 
 
     <Style x:Key="TopPanelButton"
@@ -129,7 +138,7 @@
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
-        </Setter>      
+        </Setter>
     </Style>
 
     <Style x:Key="UndoTopPanelButton"
