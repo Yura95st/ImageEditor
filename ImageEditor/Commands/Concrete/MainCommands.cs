@@ -2,7 +2,7 @@
 {
     using System.Windows.Input;
 
-    using GalaSoft.MvvmLight.Command;
+    using GalaSoft.MvvmLight.CommandWpf;
 
     using ImageEditor.Commands.Abstract;
     using ImageEditor.Utils;
