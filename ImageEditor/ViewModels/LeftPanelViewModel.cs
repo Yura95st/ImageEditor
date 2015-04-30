@@ -239,7 +239,7 @@
         {
             this.Brightness = 0;
             this.Contrast = 0;
-            this.Opacity = 0;
+            this.Opacity = 255;
             this.RotationAngle = 0;
         }
 

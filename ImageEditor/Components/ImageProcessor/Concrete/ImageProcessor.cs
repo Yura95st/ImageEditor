@@ -35,7 +35,7 @@
             ImageProcessor.MaxContrast = 100;
 
             ImageProcessor.MinOpacity = 0;
-            ImageProcessor.MaxOpacity = 100;
+            ImageProcessor.MaxOpacity = 255;
 
             ImageProcessor.MinRotationAngle = -180;
             ImageProcessor.MaxRotationAngle = 180;
@@ -57,9 +57,10 @@
         {
             Guard.NotNull(image, "image");
 
-            if (newOpacity < 0 || newOpacity > 100)
+            if (newOpacity < ImageProcessor.MinOpacity || newOpacity > ImageProcessor.MaxOpacity)
             {
-                throw new ArgumentOutOfRangeException("newOpacity", "Opacity must be between 0 and 100.");
+                throw new ArgumentOutOfRangeException("newOpacity",
+                string.Format("Opacity must be between {0} and {1}.", ImageProcessor.MinOpacity, ImageProcessor.MaxOpacity));
             }
 
             int pixelsCount = image.PixelWidth * image.PixelHeight;
@@ -68,8 +69,6 @@
 
             int stride = (image.PixelWidth * image.Format.BitsPerPixel + 7) / 8;
 
-            int coef = (int)(2.55 * newOpacity);
-
             image.CopyPixels(pixels, stride, 0);
 
             for (int i = 0; i < pixelsCount; i++)
@@ -77,7 +76,7 @@
                 int red = (pixels[i] >> 16) & 255;
                 int green = (pixels[i] >> 8) & 255;
                 int blue = pixels[i] & 255;
-                int alpha = (255 - coef) & 255;
+                int alpha = newOpacity & 255;
 
                 int color = (alpha << 24) + (red << 16) + (green << 8) + blue;
 
