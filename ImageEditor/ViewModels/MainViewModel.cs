@@ -1,6 +1,7 @@
 ﻿namespace ImageEditor.ViewModels
 {
     using System;
+    using System.ComponentModel;
     using System.IO;
     using System.Windows.Media.Imaging;
 
@@ -10,6 +11,7 @@
     using ImageEditor.Components.ImageProcessor.Abstract;
     using ImageEditor.Components.ImageProcessor.Concrete;
     using ImageEditor.Messages;
+    using ImageEditor.Utils;
 
     public class MainViewModel
     {
@@ -177,10 +179,21 @@
             throw new System.NotImplementedException();
         }
 
+        private void FooterViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == ExpressionHelper.GetPropertyName(() => this.FooterViewModel.ScaleValue))
+            {
+                this.EditorViewModel.SetImageScaleRatio(this.FooterViewModel.ScaleValue / 100);
+            }
+        }
+
         private void InitViewModels()
         {
             this.EditorViewModel = new EditorViewModel();
+
             this.FooterViewModel = new FooterViewModel();
+            this.FooterViewModel.PropertyChanged += this.FooterViewModel_PropertyChanged;
+
             this.TopPanelViewModel = new TopPanelViewModel(this._commands);
 
             this.LeftPanelViewModel = new LeftPanelViewModel(this._commands, ImageProcessor.MinBrightness,

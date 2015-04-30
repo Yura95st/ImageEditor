@@ -32,11 +32,14 @@
                     Width="100"
                     VerticalAlignment="Center"
                     IsSnapToTickEnabled="True"
-                    Maximum="{Binding ScaleMax}"
-                    Minimum="{Binding ScaleMin}"
+                    Maximum="{Binding Path=ScaleMax,
+                                      Mode=OneTime}"
+                    Minimum="{Binding Path=ScaleMin,
+                                      Mode=OneTime}"
                     Orientation="Horizontal"
                     Style="{StaticResource SimpleSlider}"
-                    TickFrequency="{Binding ScaleStep}"
+                    TickFrequency="{Binding Path=ScaleStep,
+                                            Mode=OneTime}"
                     Value="{Binding Path=ScaleValue,
                                     Mode=TwoWay}" />
         </StackPanel>
