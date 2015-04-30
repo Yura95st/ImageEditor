@@ -22,6 +22,7 @@
                        VerticalAlignment="Center"
                        Source="{Binding Path=Image,
                                         Mode=OneWay}"
+                       Opacity="{Binding Path=ImageOpacity, Mode=OneWay}"
                        Stretch="Fill" />
             </Grid>
 

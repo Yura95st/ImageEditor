@@ -113,8 +113,10 @@
 
         public void ChangeOpacity()
         {
-            this.EditorViewModel.Image = this._imageProcessor.ChangeOpacity(this._openedImage,
-            this.LeftPanelViewModel.Opacity);
+            //this.EditorViewModel.Image = this._imageProcessor.ChangeOpacity(this._openedImage,
+            //this.LeftPanelViewModel.Opacity);
+
+            this.EditorViewModel.ImageOpacity = (double)this.LeftPanelViewModel.Opacity / 255;
         }
 
         public void ChangeRotationAngle()

@@ -1,5 +1,6 @@
 ﻿namespace ImageEditor.ViewModels
 {
+    using System;
     using System.Windows.Media.Imaging;
 
     using GalaSoft.MvvmLight;
@@ -10,12 +11,17 @@
     {
         private BitmapSource _image;
 
+        private double _imageOpacity;
+
         public EditorViewModel()
         {
             this._image = null;
 
             this.ImageHeight = 0;
             this.ImageWidth = 0;
+
+            this.ImageOpacity = 1;
+
             this.ImageScaleRatio = 1;
         }
 
@@ -42,6 +48,25 @@
         {
             get;
             private set;
+        }
+
+        public double ImageOpacity
+        {
+            get
+            {
+                return this._imageOpacity;
+            }
+            set
+            {
+                if (value < 0 || value > 1)
+                {
+                    throw new ArgumentOutOfRangeException("value", "Opacity value must be between 0 and 1.");
+                }
+
+                this._imageOpacity = value;
+
+                this.RaisePropertyChanged(() => this.ImageOpacity);
+            }
         }
 
         public double ImageScaleRatio
