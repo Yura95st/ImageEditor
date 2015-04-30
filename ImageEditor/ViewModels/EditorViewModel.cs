@@ -5,16 +5,23 @@
 
     using GalaSoft.MvvmLight;
 
+    using ImageEditor.Commands.Abstract;
     using ImageEditor.Utils;
 
     public class EditorViewModel : ObservableObject
     {
+        private readonly IEditorCommands _commands;
+
         private BitmapSource _image;
 
         private double _imageOpacity;
 
-        public EditorViewModel()
+        public EditorViewModel(IEditorCommands commands)
         {
+            Guard.NotNull(commands, "commands");
+
+            this._commands = commands;
+
             this._image = null;
 
             this.ImageHeight = 0;
@@ -23,6 +30,14 @@
             this.ImageOpacity = 1;
 
             this.ImageScaleRatio = 1;
+        }
+
+        public IEditorCommands Commands
+        {
+            get
+            {
+                return this._commands;
+            }
         }
 
         public BitmapSource Image

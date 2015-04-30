@@ -22,9 +22,13 @@
 
         private ICommand _cropCommand;
 
+        private ICommand _increaseScaleValueCommand;
+
         private ICommand _openCommand;
 
         private ICommand _redoCommand;
+
+        private ICommand _reduceScaleValueCommand;
 
         private ICommand _saveAsCommand;
 
@@ -40,6 +44,32 @@
         }
 
         #region IMainCommands Members
+
+        public ICommand IncreaseScaleValueCommand
+        {
+            get
+            {
+                if (this._increaseScaleValueCommand == null)
+                {
+                    this._increaseScaleValueCommand = new RelayCommand(this._viewModel.IncreaseScaleValue, () => true);
+                }
+
+                return this._increaseScaleValueCommand;
+            }
+        }
+
+        public ICommand ReduceScaleValueCommand
+        {
+            get
+            {
+                if (this._reduceScaleValueCommand == null)
+                {
+                    this._reduceScaleValueCommand = new RelayCommand(this._viewModel.ReduceScaleValue, () => true);
+                }
+
+                return this._reduceScaleValueCommand;
+            }
+        }
 
         public ICommand ChangeBrightnessCommand
         {

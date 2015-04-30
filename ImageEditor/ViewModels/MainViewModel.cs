@@ -129,6 +129,11 @@
             throw new System.NotImplementedException();
         }
 
+        public void IncreaseScaleValue()
+        {
+            this.FooterViewModel.IncreaseScaleValue();
+        }
+
         public void Open()
         {
             OpenImageMessage message = new OpenImageMessage(this, imageFilePath =>
@@ -166,6 +171,11 @@
             throw new System.NotImplementedException();
         }
 
+        public void ReduceScaleValue()
+        {
+            this.FooterViewModel.ReduceScaleValue();
+        }
+
         public void Save()
         {
             throw new System.NotImplementedException();
@@ -191,7 +201,7 @@
 
         private void InitViewModels()
         {
-            this.EditorViewModel = new EditorViewModel();
+            this.EditorViewModel = new EditorViewModel(this._commands);
 
             this.FooterViewModel = new FooterViewModel();
             this.FooterViewModel.PropertyChanged += this.FooterViewModel_PropertyChanged;

@@ -1,6 +1,6 @@
 ﻿namespace ImageEditor.Commands.Abstract
 {
-    public interface IMainCommands : ILeftPanelCommands, ITopPanelCommands
+    public interface IMainCommands : ILeftPanelCommands, ITopPanelCommands, IEditorCommands
     {
     }
 }

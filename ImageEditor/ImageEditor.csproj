@@ -65,6 +65,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Commands\Abstract\IEditorCommands.cs" />
     <Compile Include="Commands\Abstract\ITopPanelCommands.cs" />
     <Compile Include="Commands\Abstract\ILeftPanelCommands.cs" />
     <Compile Include="Commands\Abstract\IMainCommands.cs" />

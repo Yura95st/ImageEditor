@@ -10,7 +10,9 @@
             BorderBrush="{StaticResource EditorBorderBrush}"
             BorderThickness="1">
 
-        <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible">
+        <ScrollViewer HorizontalScrollBarVisibility="Visible"
+                      PreviewMouseWheel="Zoom_MouseWheel"
+                      VerticalScrollBarVisibility="Visible">
 
             <Grid Width="{Binding Path=ImageWidth,
                                   Mode=OneWay}"
@@ -20,9 +22,10 @@
                   Background="{StaticResource EditorImageGridBackgroundBrush}">
                 <Image HorizontalAlignment="Center"
                        VerticalAlignment="Center"
+                       Opacity="{Binding Path=ImageOpacity,
+                                         Mode=OneWay}"
                        Source="{Binding Path=Image,
                                         Mode=OneWay}"
-                       Opacity="{Binding Path=ImageOpacity, Mode=OneWay}"
                        Stretch="Fill" />
             </Grid>
 
