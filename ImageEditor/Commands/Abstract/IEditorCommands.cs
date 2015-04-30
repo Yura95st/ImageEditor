@@ -13,5 +13,10 @@
         {
             get;
         }
+
+        ICommand ResetScaleValueToDefaultCommand
+        {
+            get;
+        }
     }
 }

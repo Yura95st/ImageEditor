@@ -97,5 +97,13 @@
 
             this.ScaleValue = (newScaleValue < this.ScaleMin) ? this.ScaleMin : newScaleValue;
         }
+
+        /// <summary>
+        ///     Resets the scale to default.
+        /// </summary>
+        public void ResetScaleValueToDefault()
+        {
+            this.ScaleValue = 100;
+        }
     }
 }

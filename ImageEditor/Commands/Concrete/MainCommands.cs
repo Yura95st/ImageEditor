@@ -30,6 +30,8 @@
 
         private ICommand _reduceScaleValueCommand;
 
+        private ICommand _resetScaleValueToDefaultCommand;
+
         private ICommand _saveAsCommand;
 
         private ICommand _saveCommand;
@@ -68,6 +70,20 @@
                 }
 
                 return this._reduceScaleValueCommand;
+            }
+        }
+
+        public ICommand ResetScaleValueToDefaultCommand
+        {
+            get
+            {
+                if (this._resetScaleValueToDefaultCommand == null)
+                {
+                    this._resetScaleValueToDefaultCommand = new RelayCommand(this._viewModel.ResetScaleValueToDefault,
+                    () => true);
+                }
+
+                return this._resetScaleValueToDefaultCommand;
             }
         }
 

@@ -7,6 +7,7 @@
 
     using GalaSoft.MvvmLight.Messaging;
 
+    using ImageEditor.Commands.Abstract;
     using ImageEditor.Commands.Concrete;
     using ImageEditor.Components.ImageProcessor.Abstract;
     using ImageEditor.Components.ImageProcessor.Concrete;
@@ -30,6 +31,14 @@
             this._openedImage = null;
 
             this.InitViewModels();
+        }
+
+        public IMainCommands Commands
+        {
+            get
+            {
+                return this._commands;
+            }
         }
 
         public EditorViewModel EditorViewModel
@@ -174,6 +183,11 @@
         public void ReduceScaleValue()
         {
             this.FooterViewModel.ReduceScaleValue();
+        }
+
+        public void ResetScaleValueToDefault()
+        {
+            this.FooterViewModel.ResetScaleValueToDefault();
         }
 
         public void Save()

@@ -5,8 +5,16 @@
         Title="Image Editor"
         MinWidth="900"
         MinHeight="510"
-        WindowStartupLocation="CenterScreen"
-        Icon="/Themes/icons/image_editor_icon.ico">
+        Icon="/Themes/icons/image_editor_icon.ico"
+        WindowStartupLocation="CenterScreen">
+
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding MainViewModel.Commands.IncreaseScaleValueCommand}" Gesture="Ctrl+OemPlus" />
+        <KeyBinding Command="{Binding MainViewModel.Commands.ReduceScaleValueCommand}" Gesture="Ctrl+OemMinus" />
+        <KeyBinding Command="{Binding MainViewModel.Commands.ResetScaleValueToDefaultCommand}" Gesture="Ctrl+0" />
+
+    </Window.InputBindings>
+
     <Grid>
         <views:MainView DataContext="{Binding MainViewModel}" />
     </Grid>
