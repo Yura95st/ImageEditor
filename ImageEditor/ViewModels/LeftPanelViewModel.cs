@@ -270,18 +270,5 @@
             this._commands.ChangeOpacityCommand.CanExecuteChanged += this.ChangeOpacityCommandOnCanExecuteChanged;
             this._commands.ChangeRotationAngleCommand.CanExecuteChanged += this.ChangeRotationAngleCommandOnCanExecuteChanged;
         }
-
-        private void UnsubscribeToCommandsCanExecuteChanged()
-        {
-            this._commands.ChangeBrightnessCommand.CanExecuteChanged -= this.ChangeBrightnessCommandOnCanExecuteChanged;
-            this._commands.ChangeContrastCommand.CanExecuteChanged -= this.ChangeContrastCommandOnCanExecuteChanged;
-            this._commands.ChangeOpacityCommand.CanExecuteChanged -= this.ChangeOpacityCommandOnCanExecuteChanged;
-            this._commands.ChangeRotationAngleCommand.CanExecuteChanged -= this.ChangeRotationAngleCommandOnCanExecuteChanged;
-        }
-
-        ~LeftPanelViewModel()
-        {
-            this.UnsubscribeToCommandsCanExecuteChanged();
-        }
     }
 }

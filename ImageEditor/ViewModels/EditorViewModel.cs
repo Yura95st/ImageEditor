@@ -1,27 +1,22 @@
 ﻿namespace ImageEditor.ViewModels
 {
-    using System.Windows.Input;
     using System.Windows.Media.Imaging;
 
     using GalaSoft.MvvmLight;
 
+    using ImageEditor.Utils;
+
     public class EditorViewModel : ObservableObject
     {
-        private readonly double _imageScaleRatio;
-
         private BitmapSource _image;
-
-        private double _imageHeight;
-
-        private double _imageWidth;
 
         public EditorViewModel()
         {
             this._image = null;
 
-            this._imageHeight = 0;
-            this._imageWidth = 0;
-            this._imageScaleRatio = 1;
+            this.ImageHeight = 0;
+            this.ImageWidth = 0;
+            this.ImageScaleRatio = 1;
         }
 
         public BitmapSource Image
@@ -40,25 +35,34 @@
 
                     this.RaisePropertyChanged(() => this.Image);
                 }
-
-                CommandManager.InvalidateRequerySuggested();
             }
         }
 
         public double ImageHeight
         {
-            get
-            {
-                return this._imageHeight;
-            }
+            get;
+            private set;
+        }
+
+        public double ImageScaleRatio
+        {
+            get;
+            private set;
         }
 
         public double ImageWidth
         {
-            get
-            {
-                return this._imageWidth;
-            }
+            get;
+            private set;
+        }
+
+        public void SetImageScaleRatio(double imageScaleRatio)
+        {
+            Guard.GreaterThanZero(imageScaleRatio, "imageScaleRatio");
+
+            this.ImageScaleRatio = imageScaleRatio;
+
+            this.UpdateImageHeightAndWidth();
         }
 
         private void UpdateImageHeightAndWidth()
@@ -68,20 +72,20 @@
 
             if (this._image != null)
             {
-                newImageHeight = this._image.PixelHeight * this._imageScaleRatio;
-                newImageWidth = this._image.PixelWidth * this._imageScaleRatio;
+                newImageHeight = this._image.PixelHeight * this.ImageScaleRatio;
+                newImageWidth = this._image.PixelWidth * this.ImageScaleRatio;
             }
 
-            if (!this._imageHeight.Equals(newImageHeight))
+            if (!this.ImageHeight.Equals(newImageHeight))
             {
-                this._imageHeight = newImageHeight;
+                this.ImageHeight = newImageHeight;
 
                 this.RaisePropertyChanged(() => this.ImageHeight);
             }
 
-            if (!this._imageWidth.Equals(newImageWidth))
+            if (!this.ImageWidth.Equals(newImageWidth))
             {
-                this._imageWidth = newImageHeight;
+                this.ImageWidth = newImageWidth;
 
                 this.RaisePropertyChanged(() => this.ImageWidth);
             }
