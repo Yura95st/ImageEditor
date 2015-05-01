@@ -9,9 +9,20 @@
         WindowStartupLocation="CenterScreen">
 
     <Window.InputBindings>
+
         <KeyBinding Command="{Binding MainViewModel.Commands.IncreaseScaleValueCommand}" Gesture="Ctrl+OemPlus" />
         <KeyBinding Command="{Binding MainViewModel.Commands.ReduceScaleValueCommand}" Gesture="Ctrl+OemMinus" />
         <KeyBinding Command="{Binding MainViewModel.Commands.ResetScaleValueToDefaultCommand}" Gesture="Ctrl+0" />
+
+        <KeyBinding Command="{Binding MainViewModel.Commands.OpenCommand}" Gesture="Ctrl+O" />
+
+        <KeyBinding Command="{Binding MainViewModel.Commands.SaveCommand}" Gesture="Ctrl+S" />
+        <KeyBinding Command="{Binding MainViewModel.Commands.SaveAsCommand}" Gesture="Ctrl+Shift+S" />
+
+        <KeyBinding Command="{Binding MainViewModel.Commands.UndoCommand}" Gesture="Ctrl+Z" />
+
+        <KeyBinding Command="{Binding MainViewModel.Commands.RedoCommand}" Gesture="Ctrl+Shift+Z" />
+        <KeyBinding Command="{Binding MainViewModel.Commands.RedoCommand}" Gesture="Ctrl+Y" />
 
     </Window.InputBindings>
 
