@@ -22,8 +22,6 @@
                   Background="{StaticResource EditorImageGridBackgroundBrush}">
                 <Image HorizontalAlignment="Center"
                        VerticalAlignment="Center"
-                       Opacity="{Binding Path=ImageOpacity,
-                                         Mode=OneWay}"
                        Source="{Binding Path=Image,
                                         Mode=OneWay}"
                        Stretch="Fill" />
