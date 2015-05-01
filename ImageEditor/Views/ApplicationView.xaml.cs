@@ -55,13 +55,8 @@
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog
             {
-                FileName = message.ImageFileName,
-                AddExtension = true,
-                CheckPathExists = true,
-                OverwritePrompt = true,
-                ValidateNames = true,
-                DefaultExt = ".png",
-                FilterIndex = 4,
+                FileName = message.ImageFileName, AddExtension = true, CheckPathExists = true, OverwritePrompt = true,
+                ValidateNames = true, DefaultExt = ".png", FilterIndex = 4,
                 Filter =
                     string.Format(
                     "BMP ({0})|{0}|GIF ({1})|{1}|JPEG ({2}, {3})|{2};{3}|PNG ({4})|{4}|TIFF ({5}, {6})|{5};{6}", "*.bmp",

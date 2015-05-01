@@ -25,23 +25,6 @@
 
         private string _openedImageFilePath;
 
-        public string OpenedImageFilePath
-        {
-            get
-            {
-                return this._openedImageFilePath;
-            }
-            private set
-            {
-                if (value != this._openedImageFilePath)
-                {
-                    this._openedImageFilePath = value;
-
-                    this.RaisePropertyChanged(() => this.OpenedImageFilePath);
-                }
-            }
-        }
-
         public MainViewModel()
         {
             this._commands = new MainCommands(this);
@@ -78,6 +61,23 @@
         {
             get;
             private set;
+        }
+
+        public string OpenedImageFilePath
+        {
+            get
+            {
+                return this._openedImageFilePath;
+            }
+            private set
+            {
+                if (value != this._openedImageFilePath)
+                {
+                    this._openedImageFilePath = value;
+
+                    this.RaisePropertyChanged(() => this.OpenedImageFilePath);
+                }
+            }
         }
 
         public TopPanelViewModel TopPanelViewModel

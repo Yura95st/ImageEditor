@@ -185,13 +185,6 @@
             return result;
         }
 
-        private static int ChangeColorOpacity(int color, int opacity)
-        {
-            color -= 255 - opacity;
-
-            return ImageProcessor.AdjustColorValue(color);
-        }
-
         private static int ChangeColorBrightness(int color, int brightness)
         {
             color += (int)(brightness * 2.55);
@@ -213,6 +206,13 @@
             newColor = newColor * 255;
 
             return ImageProcessor.AdjustColorValue((int)newColor);
+        }
+
+        private static int ChangeColorOpacity(int color, int opacity)
+        {
+            color -= 255 - opacity;
+
+            return ImageProcessor.AdjustColorValue(color);
         }
     }
 }
