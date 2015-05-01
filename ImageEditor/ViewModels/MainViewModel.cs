@@ -5,6 +5,7 @@
     using System.IO;
     using System.Windows.Media.Imaging;
 
+    using GalaSoft.MvvmLight;
     using GalaSoft.MvvmLight.Messaging;
 
     using ImageEditor.Commands.Abstract;
@@ -14,7 +15,7 @@
     using ImageEditor.Messages;
     using ImageEditor.Utils;
 
-    public class MainViewModel
+    public class MainViewModel : ObservableObject
     {
         private readonly MainCommands _commands;
 
@@ -24,6 +25,23 @@
 
         private string _openedImageFilePath;
 
+        public string OpenedImageFilePath
+        {
+            get
+            {
+                return this._openedImageFilePath;
+            }
+            private set
+            {
+                if (value != this._openedImageFilePath)
+                {
+                    this._openedImageFilePath = value;
+
+                    this.RaisePropertyChanged(() => this.OpenedImageFilePath);
+                }
+            }
+        }
+
         public MainViewModel()
         {
             this._commands = new MainCommands(this);
@@ -31,7 +49,7 @@
             this._imageProcessor = new ImageProcessor();
 
             this._openedImage = null;
-            this._openedImageFilePath = "";
+            this._openedImageFilePath = null;
 
             this.InitViewModels();
         }
@@ -70,12 +88,12 @@
 
         public bool CanChangeBrightness()
         {
-            return false;
+            return this.IsImageOpened();
         }
 
         public bool CanChangeContrast()
         {
-            return false;
+            return this.IsImageOpened();
         }
 
         public bool CanChangeOpacity()
@@ -115,12 +133,14 @@
 
         public void ChangeBrightness()
         {
-            throw new System.NotImplementedException();
+            this.EditorViewModel.Image = this._imageProcessor.ChangeBrightness(this._openedImage,
+            this.LeftPanelViewModel.Brightness);
         }
 
         public void ChangeContrast()
         {
-            throw new System.NotImplementedException();
+            this.EditorViewModel.Image = this._imageProcessor.ChangeContrast(this._openedImage,
+            this.LeftPanelViewModel.Contrast);
         }
 
         public void ChangeOpacity()
@@ -154,7 +174,7 @@
                     {
                         this._openedImage = MainViewModel.GetBitmapSourceFromFile(imageFilePath);
 
-                        this._openedImageFilePath = imageFilePath;
+                        this.OpenedImageFilePath = imageFilePath;
 
                         this.EditorViewModel.Image = this._openedImage;
 

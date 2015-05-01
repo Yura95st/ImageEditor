@@ -2,7 +2,8 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:views="clr-namespace:ImageEditor.Views"
-        Title="Image Editor"
+        Title="{Binding Path=Title,
+                        Mode=OneWay}"
         MinWidth="900"
         MinHeight="510"
         Icon="/Themes/icons/image_editor_icon.ico"
