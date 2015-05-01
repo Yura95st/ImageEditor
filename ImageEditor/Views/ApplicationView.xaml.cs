@@ -51,6 +51,31 @@
             }
         }
 
+        private static void OnSaveAsImage(SaveAsImageMessage message)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                FileName = message.ImageFileName,
+                AddExtension = true,
+                CheckPathExists = true,
+                OverwritePrompt = true,
+                ValidateNames = true,
+                DefaultExt = ".png",
+                FilterIndex = 4,
+                Filter =
+                    string.Format(
+                    "BMP ({0})|{0}|GIF ({1})|{1}|JPEG ({2}, {3})|{2};{3}|PNG ({4})|{4}|TIFF ({5}, {6})|{5};{6}", "*.bmp",
+                    "*.gif", "*.jpg", "*.jpeg", "*.png", "*.tif", "*.tiff")
+            };
+
+            bool? result = saveFileDialog.ShowDialog();
+
+            if (result == true)
+            {
+                message.Execute(saveFileDialog.FileName);
+            }
+        }
+
         private void OnUnloaded(object sender, RoutedEventArgs routedEventArgs)
         {
             // Unregister the view from all messages on unloading
@@ -61,6 +86,7 @@
         {
             Messenger.Default.Register<ErrorMessage>(this, ApplicationView.OnError);
             Messenger.Default.Register<OpenImageMessage>(this, ApplicationView.OnOpenImage);
+            Messenger.Default.Register<SaveAsImageMessage>(this, ApplicationView.OnSaveAsImage);
         }
     }
 }

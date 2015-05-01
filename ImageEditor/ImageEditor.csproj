@@ -82,6 +82,7 @@
       <DependentUpon>NumericUpDownSlider.xaml</DependentUpon>
     </Compile>
     <Compile Include="Messages\ErrorMessage.cs" />
+    <Compile Include="Messages\SaveAsImageMessage.cs" />
     <Compile Include="Messages\OpenImageMessage.cs" />
     <Compile Include="Utils\ExceptionHelper.cs" />
     <Compile Include="Utils\ExpressionHelper.cs" />

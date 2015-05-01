@@ -22,6 +22,8 @@
 
         private BitmapSource _openedImage;
 
+        private string _openedImageFilePath;
+
         public MainViewModel()
         {
             this._commands = new MainCommands(this);
@@ -29,6 +31,7 @@
             this._imageProcessor = new ImageProcessor();
 
             this._openedImage = null;
+            this._openedImageFilePath = "";
 
             this.InitViewModels();
         }
@@ -97,12 +100,12 @@
 
         public bool CanSave()
         {
-            return false;
+            return this.IsImageOpened();
         }
 
         public bool CanSaveAs()
         {
-            return false;
+            return this.IsImageOpened();
         }
 
         public bool CanUndo()
@@ -149,16 +152,13 @@
                 {
                     try
                     {
-                        this._openedImage = new BitmapImage(new Uri(imageFilePath, UriKind.Absolute));
+                        this._openedImage = MainViewModel.GetBitmapSourceFromFile(imageFilePath);
+
+                        this._openedImageFilePath = imageFilePath;
 
                         this.EditorViewModel.Image = this._openedImage;
 
                         this.LeftPanelViewModel.ResetToDefaults();
-                    }
-                    catch (FileNotFoundException)
-                    {
-                        Messenger.Default.Send(new ErrorMessage(this,
-                        string.Format("{0}{1}File is not found.", imageFilePath, Environment.NewLine)));
                     }
                     catch
                     {
@@ -190,12 +190,35 @@
 
         public void Save()
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                MainViewModel.SaveImageToFile(this.EditorViewModel.Image, this._openedImageFilePath);
+            }
+            catch
+            {
+                Messenger.Default.Send(new ErrorMessage(this,
+                string.Format("{0}{1}ImageEditor can't save image to the file.", this._openedImageFilePath,
+                Environment.NewLine)));
+            }
         }
 
         public void SaveAs()
         {
-            throw new System.NotImplementedException();
+            SaveAsImageMessage message = new SaveAsImageMessage(this,
+            Path.GetFileNameWithoutExtension(this._openedImageFilePath), imageFilePath =>
+            {
+                try
+                {
+                    MainViewModel.SaveImageToFile(this.EditorViewModel.Image, imageFilePath);
+                }
+                catch
+                {
+                    Messenger.Default.Send(new ErrorMessage(this,
+                    string.Format("{0}{1}ImageEditor can't save image to the file.", imageFilePath, Environment.NewLine)));
+                }
+            });
+
+            Messenger.Default.Send(message);
         }
 
         public void Undo()
@@ -220,6 +243,20 @@
             }
         }
 
+        private static BitmapSource GetBitmapSourceFromFile(string filePath)
+        {
+            BitmapImage bitmapImage = new BitmapImage();
+
+            bitmapImage.BeginInit();
+
+            bitmapImage.UriSource = new Uri(filePath, UriKind.Absolute);
+            bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+
+            bitmapImage.EndInit();
+
+            return bitmapImage;
+        }
+
         private void InitViewModels()
         {
             this.EditorViewModel = new EditorViewModel(this._commands);
@@ -240,6 +277,64 @@
             bool result = this._openedImage != null;
 
             return result;
+        }
+
+        private static void SaveImageToFile(BitmapSource image, string filePath)
+        {
+            using (FileStream fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                BitmapEncoder encoder;
+
+                switch (Path.GetExtension(filePath)
+                .ToLower())
+                {
+                    case ".bmp":
+                    {
+                        encoder = new BmpBitmapEncoder();
+
+                        break;
+                    }
+
+                    case ".gif":
+                    {
+                        encoder = new GifBitmapEncoder();
+
+                        break;
+                    }
+
+                    case ".jpg":
+                    case ".jpeg":
+                    {
+                        encoder = new JpegBitmapEncoder();
+
+                        break;
+                    }
+
+                    case ".png":
+                    {
+                        encoder = new PngBitmapEncoder();
+
+                        break;
+                    }
+
+                    case ".tif":
+                    case ".tiff":
+                    {
+                        encoder = new TiffBitmapEncoder();
+
+                        break;
+                    }
+
+                    default:
+                    {
+                        encoder = new PngBitmapEncoder();
+                        break;
+                    }
+                }
+
+                encoder.Frames.Add(BitmapFrame.Create(image));
+                encoder.Save(fileStream);
+            }
         }
     }
 }
