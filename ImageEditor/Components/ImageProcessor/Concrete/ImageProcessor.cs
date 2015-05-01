@@ -45,48 +45,17 @@
 
         public BitmapSource ChangeBrightness(BitmapSource image, int newBrightness)
         {
-            throw new System.NotImplementedException();
+            return this.AdjustImage(image, newBrightness, null, null);
         }
 
         public BitmapSource ChangeContrast(BitmapSource image, int newContrast)
         {
-            throw new System.NotImplementedException();
+            return this.AdjustImage(image, null, newContrast, null);
         }
 
         public BitmapSource ChangeOpacity(BitmapSource image, int newOpacity)
         {
-            Guard.NotNull(image, "image");
-
-            if (newOpacity < ImageProcessor.MinOpacity || newOpacity > ImageProcessor.MaxOpacity)
-            {
-                throw new ArgumentOutOfRangeException("newOpacity",
-                string.Format("Opacity must be between {0} and {1}.", ImageProcessor.MinOpacity, ImageProcessor.MaxOpacity));
-            }
-
-            int pixelsCount = image.PixelWidth * image.PixelHeight;
-
-            int[] pixels = new int[pixelsCount];
-
-            int stride = (image.PixelWidth * image.Format.BitsPerPixel + 7) / 8;
-
-            image.CopyPixels(pixels, stride, 0);
-
-            for (int i = 0; i < pixelsCount; i++)
-            {
-                int red = (pixels[i] >> 16) & 255;
-                int green = (pixels[i] >> 8) & 255;
-                int blue = pixels[i] & 255;
-                int alpha = newOpacity & 255;
-
-                int color = (alpha << 24) + (red << 16) + (green << 8) + blue;
-
-                pixels[i] = color;
-            }
-
-            BitmapSource result = BitmapSource.Create(image.PixelWidth, image.PixelHeight, image.DpiX, image.DpiY,
-            PixelFormats.Bgra32, image.Palette, pixels, stride);
-
-            return result;
+            return this.AdjustImage(image, null, null, newOpacity);
         }
 
         public BitmapSource Crop(BitmapSource image, Point leftTopCornerPoint, double width, double height)
@@ -127,5 +96,116 @@
         }
 
         #endregion
+
+        private static int AdjustColorValue(int color)
+        {
+            if (color > 255)
+            {
+                color = 255;
+            }
+            else if (color < 0)
+            {
+                color = 0;
+            }
+
+            return color;
+        }
+
+        private BitmapSource AdjustImage(BitmapSource image, int? newBrightness, int? newContrast, int? newOpacity)
+        {
+            Guard.NotNull(image, "image");
+
+            if (newBrightness.HasValue
+            && (newBrightness.Value < ImageProcessor.MinBrightness || newBrightness.Value > ImageProcessor.MaxBrightness))
+            {
+                throw new ArgumentOutOfRangeException("newBrightness",
+                string.Format("Brightness must be between {0} and {1}.", ImageProcessor.MinBrightness,
+                ImageProcessor.MaxBrightness));
+            }
+
+            if (newContrast.HasValue
+            && (newContrast.Value < ImageProcessor.MinContrast || newContrast.Value > ImageProcessor.MaxContrast))
+            {
+                throw new ArgumentOutOfRangeException("newContrast",
+                string.Format("Contrast must be between {0} and {1}.", ImageProcessor.MinContrast, ImageProcessor.MaxContrast));
+            }
+
+            if (newOpacity.HasValue
+            && (newOpacity.Value < ImageProcessor.MinOpacity || newOpacity.Value > ImageProcessor.MaxOpacity))
+            {
+                throw new ArgumentOutOfRangeException("newOpacity",
+                string.Format("Opacity must be between {0} and {1}.", ImageProcessor.MinOpacity, ImageProcessor.MaxOpacity));
+            }
+
+            int pixelsCount = image.PixelWidth * image.PixelHeight;
+
+            int[] pixels = new int[pixelsCount];
+
+            int stride = (image.PixelWidth * image.Format.BitsPerPixel + 7) / 8;
+
+            image.CopyPixels(pixels, stride, 0);
+
+            for (int i = 0; i < pixelsCount; i++)
+            {
+                int alpha = (pixels[i] >> 24) & 255;
+                int red = (pixels[i] >> 16) & 255;
+                int green = (pixels[i] >> 8) & 255;
+                int blue = pixels[i] & 255;
+
+                // Adjust brightness
+                if (newBrightness.HasValue)
+                {
+                    red = ImageProcessor.ChangeColorBrightness(red, newBrightness.Value);
+                    green = ImageProcessor.ChangeColorBrightness(green, newBrightness.Value);
+                    blue = ImageProcessor.ChangeColorBrightness(blue, newBrightness.Value);
+                }
+
+                // Adjust contrast
+                if (newContrast.HasValue)
+                {
+                    red = ImageProcessor.ChangeColorContrast(red, newContrast.Value);
+                    green = ImageProcessor.ChangeColorContrast(green, newContrast.Value);
+                    blue = ImageProcessor.ChangeColorContrast(blue, newContrast.Value);
+                }
+
+                // Adjust opacity
+                if (newOpacity.HasValue)
+                {
+                    alpha = newOpacity.Value & 255;
+                }
+
+                int color = (alpha << 24) + (red << 16) + (green << 8) + blue;
+
+                pixels[i] = color;
+            }
+
+            BitmapSource result = BitmapSource.Create(image.PixelWidth, image.PixelHeight, image.DpiX, image.DpiY,
+            PixelFormats.Bgra32, image.Palette, pixels, stride);
+
+            return result;
+        }
+
+        private static int ChangeColorBrightness(int color, int brightness)
+        {
+            color += (int)(brightness * 2.55);
+
+            return ImageProcessor.AdjustColorValue(color);
+        }
+
+        private static int ChangeColorContrast(int color, int newContrast)
+        {
+            double newColor = color / 255.0;
+
+            // Convert contrast value from [-100, 100] to [0.0, 4.0];
+            double contrast = (100 + newContrast) / 100.0;
+            contrast *= contrast;
+
+            newColor = newColor - 0.5;
+            newColor = newColor * contrast;
+            newColor = newColor + 0.5;
+            newColor = newColor * 255;
+
+            return ImageProcessor.AdjustColorValue((int)newColor);
+        }
     }
 }
