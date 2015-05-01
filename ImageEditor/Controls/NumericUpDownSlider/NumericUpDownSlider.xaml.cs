@@ -124,22 +124,19 @@
 
         private void TextBox_OnLostFocus(object sender, RoutedEventArgs e)
         {
-            double newValue;
-
-            if (double.TryParse(this.TextBox.Text, out newValue))
-            {
-                this.Value = newValue;
-            }
-            else
-            {
-                this.Value = 0;
-            }
+            this.UpdateValue();
         }
 
         private void TextBox_OnPreviewKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Space)
             {
+                e.Handled = true;
+            }
+            else if (e.Key == Key.Enter)
+            {
+                this.UpdateValue();
+
                 e.Handled = true;
             }
         }
@@ -166,6 +163,13 @@
             this.Slider.Value = this.Value;
 
             this.TextBox.Text = this.Value.ToString();
+        }
+
+        private void UpdateValue()
+        {
+            double newValue;
+
+            this.Value = double.TryParse(this.TextBox.Text, out newValue) ? newValue : 0;
         }
 
         private void ValidateMinAndMaxValues()
