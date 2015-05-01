@@ -203,6 +203,15 @@
             throw new System.NotImplementedException();
         }
 
+        private void EditorViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == ExpressionHelper.GetPropertyName(() => this.EditorViewModel.Image))
+            {
+                this.FooterViewModel.ImageWidth = this.EditorViewModel.Image.PixelWidth;
+                this.FooterViewModel.ImageHeight = this.EditorViewModel.Image.PixelHeight;
+            }
+        }
+
         private void FooterViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == ExpressionHelper.GetPropertyName(() => this.FooterViewModel.ScaleValue))
@@ -214,6 +223,7 @@
         private void InitViewModels()
         {
             this.EditorViewModel = new EditorViewModel(this._commands);
+            this.EditorViewModel.PropertyChanged += this.EditorViewModelOnPropertyChanged;
 
             this.FooterViewModel = new FooterViewModel();
             this.FooterViewModel.PropertyChanged += this.FooterViewModel_PropertyChanged;

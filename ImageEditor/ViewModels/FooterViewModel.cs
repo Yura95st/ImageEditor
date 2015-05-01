@@ -2,8 +2,14 @@
 {
     using GalaSoft.MvvmLight;
 
+    using ImageEditor.Utils;
+
     public class FooterViewModel : ObservableObject
     {
+        private int _imageHeight;
+
+        private int _imageWidth;
+
         private double _scaleValue;
 
         /// <summary>
@@ -17,6 +23,44 @@
             this.ScaleStep = 10;
 
             this._scaleValue = 100;
+        }
+
+        public int ImageHeight
+        {
+            get
+            {
+                return this._imageHeight;
+            }
+            set
+            {
+                Guard.IntNonNegative(value, "value");
+
+                if (value != this._imageHeight)
+                {
+                    this._imageHeight = value;
+
+                    this.RaisePropertyChanged(() => this.ImageHeight);
+                }
+            }
+        }
+
+        public int ImageWidth
+        {
+            get
+            {
+                return this._imageWidth;
+            }
+            set
+            {
+                Guard.IntNonNegative(value, "value");
+
+                if (value != this._imageWidth)
+                {
+                    this._imageWidth = value;
+
+                    this.RaisePropertyChanged(() => this.ImageWidth);
+                }
+            }
         }
 
         /// <summary>

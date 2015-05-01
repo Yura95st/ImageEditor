@@ -19,14 +19,28 @@
                     VerticalAlignment="Center"
                     Orientation="Horizontal">
 
-            <TextBlock Width="20"
-                       Foreground="{StaticResource FooterForeroundBrush}"
-                       Text="{Binding Path=Value,
-                                      ElementName=ZoomSlider,
-                                      Mode=OneWay}"
-                       TextAlignment="Right" />
+            <TextBlock Margin="0,0,15,0"
+                       Foreground="{StaticResource FooterForegroundBrush}"
+                       TextAlignment="Right">
+                <TextBlock.Text>
+                    <MultiBinding StringFormat=" {0} x {1}">
+                        <Binding Mode="OneWay" Path="ImageWidth" />
+                        <Binding Mode="OneWay" Path="ImageHeight" />
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
 
-            <TextBlock Margin="0,0,10,0" Foreground="{StaticResource FooterForeroundBrush}">%</TextBlock>
+            <TextBlock Width="35"
+                       Margin="0,0,10,0"
+                       Foreground="{StaticResource FooterForegroundBrush}"
+                       TextAlignment="Right">
+                <TextBlock.Text>
+                    <Binding ElementName="ZoomSlider"
+                             Mode="OneWay"
+                             Path="Value"
+                             StringFormat=" {0}%" />
+                </TextBlock.Text>
+            </TextBlock>
 
             <Slider x:Name="ZoomSlider"
                     Width="100"

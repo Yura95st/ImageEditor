@@ -7,7 +7,7 @@
     <SolidColorBrush x:Key="MouseOverButtonBackgroundBrush" Color="#FEFEFE" />
 
     <SolidColorBrush x:Key="FooterBackgroundBrush" Color="#007ACC" />
-    <SolidColorBrush x:Key="FooterForeroundBrush" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="FooterForegroundBrush" Color="#FFFFFF" />
 
     <SolidColorBrush x:Key="LeftPanelBorderBrush" Color="#D2D4DF" />
 
