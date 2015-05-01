@@ -171,7 +171,7 @@
                 // Adjust opacity
                 if (newOpacity.HasValue)
                 {
-                    alpha = newOpacity.Value & 255;
+                    alpha = ImageProcessor.ChangeColorOpacity(alpha, newOpacity.Value);
                 }
 
                 int color = (alpha << 24) + (red << 16) + (green << 8) + blue;
@@ -183,6 +183,13 @@
             PixelFormats.Bgra32, image.Palette, pixels, stride);
 
             return result;
+        }
+
+        private static int ChangeColorOpacity(int color, int opacity)
+        {
+            color -= 255 - opacity;
+
+            return ImageProcessor.AdjustColorValue(color);
         }
 
         private static int ChangeColorBrightness(int color, int brightness)
