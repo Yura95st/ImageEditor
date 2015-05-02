@@ -92,7 +92,98 @@
 
         public BitmapSource Rotate(BitmapSource image, int angle)
         {
-            throw new System.NotImplementedException();
+            Guard.NotNull(image, "image");
+
+            if (angle < ImageProcessor.MinRotationAngle || angle > ImageProcessor.MaxRotationAngle)
+            {
+                throw new ArgumentOutOfRangeException("angle",
+                string.Format("Angle must be between {0} and {1}.", ImageProcessor.MinRotationAngle,
+                ImageProcessor.MaxRotationAngle));
+            }
+
+            int oldWidth = image.PixelWidth;
+            int oldHeight = image.PixelHeight;
+
+            int bitsPerPixel = image.Format.BitsPerPixel;
+
+            int stride = (oldWidth * bitsPerPixel + 7) / 8;
+
+            byte[] oldImage = new byte[oldHeight * stride];
+
+            image.CopyPixels(oldImage, stride, 0);
+
+            // Convert angle from degrees to radians
+            double angleInRadian = ImageProcessor.ConvertDegreeAngleToRadian(angle);
+
+            // Calculate centerPoint of the image to rotate by
+            Point rotationCenterPoint = new Point(Math.Floor(oldWidth / 2.0), Math.Floor(oldHeight / 2.0));
+
+            Point topLeftPoint = new Point(0, 0);
+            Point bottomLeftPoint = new Point(0, oldHeight);
+
+            Point newTopLeftPoint = ImageProcessor.RotatePoint(topLeftPoint, rotationCenterPoint, angleInRadian);
+            Point newBottomLeftPoint = ImageProcessor.RotatePoint(bottomLeftPoint, rotationCenterPoint, angleInRadian);
+
+            // Calculate newWidth and newHeight values
+            int newWidth =
+            (int)
+            Math.Max(Math.Abs(newTopLeftPoint.X - rotationCenterPoint.X),
+            Math.Abs(newBottomLeftPoint.X - rotationCenterPoint.X)) * 2;
+
+            int newHeight =
+            (int)
+            Math.Max(Math.Abs(newTopLeftPoint.Y - rotationCenterPoint.Y),
+            Math.Abs(newBottomLeftPoint.Y - rotationCenterPoint.Y)) * 2;
+
+            int newStride = (newWidth * bitsPerPixel + 7) / 8;
+
+            // Calculate centerPoint of the newImage
+            Point newRotationCenterPoint = new Point(Math.Floor(newWidth / 2.0), Math.Floor(newHeight / 2.0));
+
+            byte[] newImage = new byte[newHeight * newStride];
+
+            for (int i = 0; i < oldWidth; i++)
+            {
+                for (int j = 0; j < oldHeight; j++)
+                {
+                    Point point = new Point(i, j);
+
+                    Point rotatedPoint = ImageProcessor.RotatePoint(point, rotationCenterPoint, angleInRadian);
+
+                    rotatedPoint.X += newRotationCenterPoint.X - rotationCenterPoint.X;
+                    rotatedPoint.Y += newRotationCenterPoint.Y - rotationCenterPoint.Y;
+
+                    if (rotatedPoint.X >= 0 && rotatedPoint.X < newWidth && rotatedPoint.Y >= 0 && rotatedPoint.Y < newHeight)
+                    {
+                        int index = ImageProcessor.GetPixelIndex(point, bitsPerPixel, stride);
+                        int newIndex = ImageProcessor.GetPixelIndex(rotatedPoint, bitsPerPixel, newStride);
+
+                        if (newIndex >= 0)
+                        {
+                            if (newIndex + 7 < newImage.Length)
+                            {
+                                newImage[newIndex + 4] = oldImage[index];
+                                newImage[newIndex + 5] = oldImage[index + 1];
+                                newImage[newIndex + 6] = oldImage[index + 2];
+                                newImage[newIndex + 7] = oldImage[index + 3];
+                            }
+
+                            if (newIndex + 3 < newImage.Length)
+                            {
+                                newImage[newIndex] = oldImage[index];
+                                newImage[newIndex + 1] = oldImage[index + 1];
+                                newImage[newIndex + 2] = oldImage[index + 2];
+                                newImage[newIndex + 3] = oldImage[index + 3];
+                            }
+                        }
+                    }
+                }
+            }
+
+            BitmapSource result = BitmapSource.Create(newWidth, newHeight, image.DpiX, image.DpiY, PixelFormats.Bgra32,
+            image.Palette, newImage, newStride);
+
+            return result;
         }
 
         #endregion
@@ -194,18 +285,13 @@
 
         private static int ChangeColorContrast(int color, int newContrast)
         {
-            double newColor = color / 255.0;
-
             // Convert contrast value from [-100, 100] to [0.0, 4.0];
-            double contrast = (100 + newContrast) / 100.0;
-            contrast *= contrast;
+            double contrastLevel = (100 + newContrast) / 100.0;
+            contrastLevel *= contrastLevel;
 
-            newColor = newColor - 0.5;
-            newColor = newColor * contrast;
-            newColor = newColor + 0.5;
-            newColor = newColor * 255;
+            int newColor = (int)(((((color / 255.0) - 0.5) * contrastLevel) + 0.5) * 255.0);
 
-            return ImageProcessor.AdjustColorValue((int)newColor);
+            return ImageProcessor.AdjustColorValue(newColor);
         }
 
         private static int ChangeColorOpacity(int color, int opacity)
@@ -213,6 +299,46 @@
             color -= 255 - opacity;
 
             return ImageProcessor.AdjustColorValue(color);
+        }
+
+        private static double ConvertDegreeAngleToRadian(int angle)
+        {
+            if (angle < 0)
+            {
+                angle += 360;
+            }
+
+            double angleInRadian = angle * Math.PI / 180;
+
+            return angleInRadian;
+        }
+
+        private static int GetPixelIndex(Point point, int bitsPerPixel, int stride)
+        {
+            int index = ((int)point.X * bitsPerPixel + 7) / 8 + (int)point.Y * stride;
+
+            return index;
+        }
+
+        private static Point RotatePoint(Point pointToRotate, Point rotationCenterPoint, double angle)
+        {
+            double sin = Math.Sin(angle);
+            double cos = Math.Cos(angle);
+
+            Point newPoint = new Point
+            {
+                X =
+                    rotationCenterPoint.X
+                    + Math.Round((pointToRotate.X - rotationCenterPoint.X) * cos
+                    + (pointToRotate.Y - rotationCenterPoint.Y) * sin),
+                Y =
+                    rotationCenterPoint.Y
+                    + Math.Round((pointToRotate.Y - rotationCenterPoint.Y) * cos
+                    - (pointToRotate.X - rotationCenterPoint.X) * sin)
+            };
+
+
+            return newPoint;
         }
     }
 }

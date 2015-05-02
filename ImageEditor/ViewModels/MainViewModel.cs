@@ -3,6 +3,7 @@
     using System;
     using System.ComponentModel;
     using System.IO;
+    using System.Windows.Media;
     using System.Windows.Media.Imaging;
 
     using GalaSoft.MvvmLight;
@@ -103,7 +104,7 @@
 
         public bool CanChangeRotationAngle()
         {
-            return false;
+            return this.IsImageOpened();
         }
 
         public bool CanCrop()
@@ -151,7 +152,8 @@
 
         public void ChangeRotationAngle()
         {
-            throw new System.NotImplementedException();
+            this.EditorViewModel.Image = this._imageProcessor.Rotate(this._openedImage,
+            this.LeftPanelViewModel.RotationAngle);
         }
 
         public void Crop()
