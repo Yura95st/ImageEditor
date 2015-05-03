@@ -45,7 +45,7 @@
         {
             if (argumentValue == null)
             {
-                throw new ArgumentNullException(argumentName);
+                throw new ArgumentNullException(argumentName, "The argument can't be null.");
             }
         }
 

@@ -174,7 +174,7 @@
                 {
                     try
                     {
-                        this._openedImage = MainViewModel.GetBitmapSourceFromFile(imageFilePath);
+                        this._openedImage = ImageHelper.GetBitmapSourceFromFile(imageFilePath);
 
                         this.OpenedImageFilePath = imageFilePath;
 
@@ -214,7 +214,7 @@
         {
             try
             {
-                MainViewModel.SaveImageToFile(this.EditorViewModel.Image, this._openedImageFilePath);
+                ImageHelper.SaveImageToFile(this.EditorViewModel.Image, this._openedImageFilePath);
             }
             catch
             {
@@ -231,7 +231,7 @@
             {
                 try
                 {
-                    MainViewModel.SaveImageToFile(this.EditorViewModel.Image, imageFilePath);
+                    ImageHelper.SaveImageToFile(this.EditorViewModel.Image, imageFilePath);
                 }
                 catch
                 {
@@ -265,20 +265,6 @@
             }
         }
 
-        private static BitmapSource GetBitmapSourceFromFile(string filePath)
-        {
-            BitmapImage bitmapImage = new BitmapImage();
-
-            bitmapImage.BeginInit();
-
-            bitmapImage.UriSource = new Uri(filePath, UriKind.Absolute);
-            bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-
-            bitmapImage.EndInit();
-
-            return bitmapImage;
-        }
-
         private void InitViewModels()
         {
             this.EditorViewModel = new EditorViewModel(this._commands);
@@ -297,64 +283,6 @@
             bool result = this._openedImage != null;
 
             return result;
-        }
-
-        private static void SaveImageToFile(BitmapSource image, string filePath)
-        {
-            using (FileStream fileStream = new FileStream(filePath, FileMode.Create))
-            {
-                BitmapEncoder encoder;
-
-                switch (Path.GetExtension(filePath)
-                .ToLower())
-                {
-                    case ".bmp":
-                    {
-                        encoder = new BmpBitmapEncoder();
-
-                        break;
-                    }
-
-                    case ".gif":
-                    {
-                        encoder = new GifBitmapEncoder();
-
-                        break;
-                    }
-
-                    case ".jpg":
-                    case ".jpeg":
-                    {
-                        encoder = new JpegBitmapEncoder();
-
-                        break;
-                    }
-
-                    case ".png":
-                    {
-                        encoder = new PngBitmapEncoder();
-
-                        break;
-                    }
-
-                    case ".tif":
-                    case ".tiff":
-                    {
-                        encoder = new TiffBitmapEncoder();
-
-                        break;
-                    }
-
-                    default:
-                    {
-                        encoder = new PngBitmapEncoder();
-                        break;
-                    }
-                }
-
-                encoder.Frames.Add(BitmapFrame.Create(image));
-                encoder.Save(fileStream);
-            }
         }
     }
 }

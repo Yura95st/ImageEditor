@@ -89,6 +89,7 @@
     <Compile Include="Utils\ExceptionHelper.cs" />
     <Compile Include="Utils\ExpressionHelper.cs" />
     <Compile Include="Utils\Guard.cs" />
+    <Compile Include="Utils\ImageHelper.cs" />
     <Compile Include="ViewModels\LeftPanelViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\TopPanelViewModel.cs" />
