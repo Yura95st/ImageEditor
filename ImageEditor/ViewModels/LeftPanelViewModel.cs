@@ -5,6 +5,7 @@
     using GalaSoft.MvvmLight;
 
     using ImageEditor.Commands.Abstract;
+    using ImageEditor.Components.ImageProcessor.Concrete;
     using ImageEditor.Utils;
 
     public class LeftPanelViewModel : ObservableObject
@@ -19,26 +20,13 @@
 
         private int _rotationAngle;
 
-        public LeftPanelViewModel(ILeftPanelCommands commands, int minBrightness, int maxBrightness, int minContrast,
-                                  int maxContrast, int minOpacity, int maxOpacity, int minRotationAngle, int maxRotationAngle)
+        public LeftPanelViewModel(ILeftPanelCommands commands)
         {
             Guard.NotNull(commands, "commands");
 
             this._commands = commands;
 
             this.SubscribeToCommandsCanExecuteChanged();
-
-            this.MinBrightness = (minBrightness > maxBrightness) ? maxBrightness : minBrightness;
-            this.MaxBrightness = maxBrightness;
-
-            this.MinContrast = (minContrast > maxContrast) ? maxContrast : minContrast;
-            this.MaxContrast = maxContrast;
-
-            this.MinOpacity = (minOpacity > maxOpacity) ? maxOpacity : minOpacity;
-            this.MaxOpacity = maxOpacity;
-
-            this.MinRotationAngle = (minRotationAngle > maxRotationAngle) ? maxRotationAngle : minRotationAngle;
-            this.MaxRotationAngle = maxRotationAngle;
 
             this.ResetToDefaults();
         }
@@ -133,50 +121,66 @@
 
         public int MaxBrightness
         {
-            get;
-            private set;
+            get
+            {
+                return ImageProcessor.MaxBrightness;
+            }
         }
 
         public int MaxContrast
         {
-            get;
-            private set;
+            get
+            {
+                return ImageProcessor.MaxContrast;
+            }
         }
 
         public int MaxOpacity
         {
-            get;
-            private set;
+            get
+            {
+                return ImageProcessor.MaxOpacity;
+            }
         }
 
         public int MaxRotationAngle
         {
-            get;
-            private set;
+            get
+            {
+                return ImageProcessor.MaxRotationAngle;
+            }
         }
 
         public int MinBrightness
         {
-            get;
-            private set;
+            get
+            {
+                return ImageProcessor.MinBrightness;
+            }
         }
 
         public int MinContrast
         {
-            get;
-            private set;
+            get
+            {
+                return ImageProcessor.MinContrast;
+            }
         }
 
         public int MinOpacity
         {
-            get;
-            private set;
+            get
+            {
+                return ImageProcessor.MinOpacity;
+            }
         }
 
         public int MinRotationAngle
         {
-            get;
-            private set;
+            get
+            {
+                return ImageProcessor.MinRotationAngle;
+            }
         }
 
         public int Opacity
@@ -237,10 +241,15 @@
 
         public void ResetToDefaults()
         {
-            this.Brightness = 0;
-            this.Contrast = 0;
-            this.Opacity = 255;
-            this.RotationAngle = 0;
+            this._brightness = ImageProcessor.DefaultBrightness;
+            this._contrast = ImageProcessor.DefaultContrast;
+            this._opacity = ImageProcessor.DefaultOpacity;
+            this._rotationAngle = ImageProcessor.DefaultRotationAngle;
+
+            this.RaisePropertyChanged(() => this.Brightness);
+            this.RaisePropertyChanged(() => this.Contrast);
+            this.RaisePropertyChanged(() => this.Opacity);
+            this.RaisePropertyChanged(() => this.RotationAngle);
         }
 
         private void ChangeBrightnessCommandOnCanExecuteChanged(object sender, EventArgs eventArgs)

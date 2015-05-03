@@ -10,6 +10,14 @@
 
     public class ImageProcessor : IImageProcessor
     {
+        public static readonly int DefaultBrightness;
+
+        public static readonly int DefaultContrast;
+
+        public static readonly int DefaultOpacity;
+
+        public static readonly int DefaultRotationAngle;
+
         public static readonly int MaxBrightness;
 
         public static readonly int MaxContrast;
@@ -30,15 +38,19 @@
         {
             ImageProcessor.MinBrightness = -100;
             ImageProcessor.MaxBrightness = 100;
+            ImageProcessor.DefaultBrightness = 0;
 
             ImageProcessor.MinContrast = -100;
             ImageProcessor.MaxContrast = 100;
+            ImageProcessor.DefaultContrast = 0;
 
             ImageProcessor.MinOpacity = 0;
             ImageProcessor.MaxOpacity = 255;
+            ImageProcessor.DefaultOpacity = ImageProcessor.MaxOpacity;
 
             ImageProcessor.MinRotationAngle = -180;
             ImageProcessor.MaxRotationAngle = 180;
+            ImageProcessor.DefaultRotationAngle = 0;
         }
 
         #region IImageProcessor Members

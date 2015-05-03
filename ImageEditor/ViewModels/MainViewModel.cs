@@ -289,9 +289,7 @@
 
             this.TopPanelViewModel = new TopPanelViewModel(this._commands);
 
-            this.LeftPanelViewModel = new LeftPanelViewModel(this._commands, ImageProcessor.MinBrightness,
-            ImageProcessor.MaxBrightness, ImageProcessor.MinContrast, ImageProcessor.MaxContrast, ImageProcessor.MinOpacity,
-            ImageProcessor.MaxOpacity, ImageProcessor.MinRotationAngle, ImageProcessor.MaxRotationAngle);
+            this.LeftPanelViewModel = new LeftPanelViewModel(this._commands);
         }
 
         private bool IsImageOpened()
