@@ -84,6 +84,8 @@
     <Compile Include="Messages\ErrorMessage.cs" />
     <Compile Include="Messages\SaveAsImageMessage.cs" />
     <Compile Include="Messages\OpenImageMessage.cs" />
+    <Compile Include="Services\Abstract\IUndoRedoService.cs" />
+    <Compile Include="Services\Concrete\UndoRedoService.cs" />
     <Compile Include="Utils\ExceptionHelper.cs" />
     <Compile Include="Utils\ExpressionHelper.cs" />
     <Compile Include="Utils\Guard.cs" />
@@ -207,6 +209,7 @@
   <ItemGroup>
     <Resource Include="Themes\Generic\images\image_background.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
