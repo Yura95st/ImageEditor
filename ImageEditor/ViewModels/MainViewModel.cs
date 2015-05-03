@@ -3,7 +3,6 @@
     using System;
     using System.ComponentModel;
     using System.IO;
-    using System.Windows.Media;
     using System.Windows.Media.Imaging;
 
     using GalaSoft.MvvmLight;
@@ -13,7 +12,10 @@
     using ImageEditor.Commands.Concrete;
     using ImageEditor.Components.ImageProcessor.Abstract;
     using ImageEditor.Components.ImageProcessor.Concrete;
+    using ImageEditor.Enums;
     using ImageEditor.Messages;
+    using ImageEditor.Models;
+    using ImageEditor.Services.Abstract;
     using ImageEditor.Utils;
 
     public class MainViewModel : ObservableObject
@@ -22,17 +24,27 @@
 
         private readonly IImageProcessor _imageProcessor;
 
-        private BitmapSource _openedImage;
+        private readonly IUndoRedoService<EditAction> _undoRedoService;
+
+        private BitmapSource _editingImage;
 
         private string _openedImageFilePath;
 
-        public MainViewModel()
+        private BitmapSource _originalImage;
+
+        public MainViewModel(IImageProcessor imageProcessor, IUndoRedoService<EditAction> undoRedoService)
         {
+            Guard.NotNull(imageProcessor, "imageProcessor");
+            Guard.NotNull(undoRedoService, "undoRedoService");
+
+            this._imageProcessor = imageProcessor;
+            this._undoRedoService = undoRedoService;
+
             this._commands = new MainCommands(this);
 
-            this._imageProcessor = new ImageProcessor();
+            this._originalImage = null;
+            this._editingImage = null;
 
-            this._openedImage = null;
             this._openedImageFilePath = null;
 
             this.InitViewModels();
@@ -114,7 +126,7 @@
 
         public bool CanRedo()
         {
-            return false;
+            return this._undoRedoService.CanRedo();
         }
 
         public bool CanSave()
@@ -129,31 +141,27 @@
 
         public bool CanUndo()
         {
-            return false;
+            return this._undoRedoService.CanUndo();
         }
 
         public void ChangeBrightness()
         {
-            this.EditorViewModel.Image = this._imageProcessor.ChangeBrightness(this._openedImage,
-            this.LeftPanelViewModel.Brightness);
+            this.PerformEditActionWithKind(EditActionKind.ChangeBrightness);
         }
 
         public void ChangeContrast()
         {
-            this.EditorViewModel.Image = this._imageProcessor.ChangeContrast(this._openedImage,
-            this.LeftPanelViewModel.Contrast);
+            this.PerformEditActionWithKind(EditActionKind.ChangeContrast);
         }
 
         public void ChangeOpacity()
         {
-            this.EditorViewModel.Image = this._imageProcessor.ChangeOpacity(this._openedImage,
-            this.LeftPanelViewModel.Opacity);
+            this.PerformEditActionWithKind(EditActionKind.ChangeOpacity);
         }
 
         public void ChangeRotationAngle()
         {
-            this.EditorViewModel.Image = this._imageProcessor.Rotate(this._openedImage,
-            this.LeftPanelViewModel.RotationAngle);
+            this.PerformEditActionWithKind(EditActionKind.Rotate);
         }
 
         public void Crop()
@@ -174,20 +182,20 @@
                 {
                     try
                     {
-                        this._openedImage = ImageHelper.GetBitmapSourceFromFile(imageFilePath);
+                        this._originalImage = ImageHelper.GetBitmapSourceFromFile(imageFilePath);
 
                         this.OpenedImageFilePath = imageFilePath;
 
-                        this.EditorViewModel.Image = this._openedImage;
+                        this.EditorViewModel.Image = this._originalImage;
 
-                        this.LeftPanelViewModel.ResetToDefaults();
+                        this.Reset();
                     }
                     catch
                     {
                         Messenger.Default.Send(new ErrorMessage(this,
-                        string.Format(
-                        "{0}{1}ImageEditor can't read this file.{1}This is not a valid bitmap file or its format is not currently supported.",
-                        imageFilePath, Environment.NewLine)));
+                            string.Format(
+                                "{0}{1}ImageEditor can't read this file.{1}This is not a valid bitmap file or its format is not currently supported.",
+                                imageFilePath, Environment.NewLine)));
                     }
                 }
             });
@@ -197,7 +205,7 @@
 
         public void Redo()
         {
-            throw new System.NotImplementedException();
+            this.UndoOrRedo(false);
         }
 
         public void ReduceScaleValue()
@@ -219,33 +227,76 @@
             catch
             {
                 Messenger.Default.Send(new ErrorMessage(this,
-                string.Format("{0}{1}ImageEditor can't save image to the file.", this._openedImageFilePath,
-                Environment.NewLine)));
+                    string.Format("{0}{1}ImageEditor can't save image to the file.", this._openedImageFilePath,
+                        Environment.NewLine)));
             }
         }
 
         public void SaveAs()
         {
             SaveAsImageMessage message = new SaveAsImageMessage(this,
-            Path.GetFileNameWithoutExtension(this._openedImageFilePath), imageFilePath =>
-            {
-                try
+                Path.GetFileNameWithoutExtension(this._openedImageFilePath), imageFilePath =>
                 {
-                    ImageHelper.SaveImageToFile(this.EditorViewModel.Image, imageFilePath);
-                }
-                catch
-                {
-                    Messenger.Default.Send(new ErrorMessage(this,
-                    string.Format("{0}{1}ImageEditor can't save image to the file.", imageFilePath, Environment.NewLine)));
-                }
-            });
+                    try
+                    {
+                        ImageHelper.SaveImageToFile(this.EditorViewModel.Image, imageFilePath);
+
+                        this.OpenedImageFilePath = imageFilePath;
+                    }
+                    catch
+                    {
+                        Messenger.Default.Send(new ErrorMessage(this,
+                            string.Format("{0}{1}ImageEditor can't save image to the file.", imageFilePath,
+                                Environment.NewLine)));
+                    }
+                });
 
             Messenger.Default.Send(message);
         }
 
         public void Undo()
         {
-            throw new System.NotImplementedException();
+            this.UndoOrRedo(true);
+        }
+
+        private void EditImage(BitmapSource imageToEdit, EditAction editAction)
+        {
+            switch (editAction.Kind)
+            {
+                case EditActionKind.ChangeBrightness:
+                {
+                    this.EditorViewModel.Image = this._imageProcessor.ChangeBrightness(imageToEdit,
+                        editAction.ImageConfiguration.Brightness);
+                    break;
+                }
+
+                case EditActionKind.ChangeContrast:
+                {
+                    this.EditorViewModel.Image = this._imageProcessor.ChangeContrast(imageToEdit,
+                        editAction.ImageConfiguration.Contrast);
+                    break;
+                }
+
+                case EditActionKind.ChangeOpacity:
+                {
+                    this.EditorViewModel.Image = this._imageProcessor.ChangeOpacity(imageToEdit,
+                        editAction.ImageConfiguration.Opacity);
+                    break;
+                }
+
+                case EditActionKind.Rotate:
+                {
+                    this.EditorViewModel.Image = this._imageProcessor.Rotate(imageToEdit,
+                        editAction.ImageConfiguration.RotationAngle);
+                    break;
+                }
+
+                case EditActionKind.ResetToInitialState:
+                {
+                    this.EditorViewModel.Image = imageToEdit;
+                    break;
+                }
+            }
         }
 
         private void EditorViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -265,6 +316,62 @@
             }
         }
 
+        private ImageConfiguration GenerateImageConfiguration()
+        {
+            ImageConfiguration imageConfiguration = new ImageConfiguration
+            {
+                Brightness = this.LeftPanelViewModel.Brightness, Contrast = this.LeftPanelViewModel.Contrast,
+                Opacity = this.LeftPanelViewModel.Opacity, RotationAngle = this.LeftPanelViewModel.RotationAngle
+            };
+
+            return imageConfiguration;
+        }
+
+        private BitmapSource GenerateImageToEdit(EditAction editAction, EditAction lastEditAction)
+        {
+            if (editAction.Kind != EditActionKind.ResetToInitialState && lastEditAction != null)
+            {
+                if (lastEditAction.Kind != editAction.Kind)
+                {
+                    BitmapSource bitmapSource = this._originalImage;
+
+                    if (editAction.Kind != EditActionKind.ChangeBrightness
+                        && editAction.ImageConfiguration.Brightness != ImageProcessor.DefaultBrightness)
+                    {
+                        bitmapSource = this._imageProcessor.ChangeBrightness(bitmapSource,
+                            editAction.ImageConfiguration.Brightness);
+                    }
+
+                    if (editAction.Kind != EditActionKind.ChangeContrast
+                        && editAction.ImageConfiguration.Contrast != ImageProcessor.DefaultContrast)
+                    {
+                        bitmapSource = this._imageProcessor.ChangeContrast(bitmapSource,
+                            editAction.ImageConfiguration.Contrast);
+                    }
+
+                    if (editAction.Kind != EditActionKind.ChangeOpacity
+                        && editAction.ImageConfiguration.Opacity != ImageProcessor.DefaultOpacity)
+                    {
+                        bitmapSource = this._imageProcessor.ChangeOpacity(bitmapSource, editAction.ImageConfiguration.Opacity);
+                    }
+
+                    if (editAction.Kind != EditActionKind.Rotate
+                        && editAction.ImageConfiguration.RotationAngle != ImageProcessor.DefaultRotationAngle)
+                    {
+                        bitmapSource = this._imageProcessor.Rotate(bitmapSource, editAction.ImageConfiguration.RotationAngle);
+                    }
+
+                    this._editingImage = bitmapSource;
+                }
+            }
+            else
+            {
+                this._editingImage = this._originalImage;
+            }
+
+            return this._editingImage;
+        }
+
         private void InitViewModels()
         {
             this.EditorViewModel = new EditorViewModel(this._commands);
@@ -280,9 +387,64 @@
 
         private bool IsImageOpened()
         {
-            bool result = this._openedImage != null;
+            bool result = this._originalImage != null;
 
             return result;
+        }
+
+        private void PerformEditActionWithKind(EditActionKind editActionKind)
+        {
+            EditAction editAction = new EditAction(editActionKind, this.GenerateImageConfiguration());
+
+            BitmapSource imageToEdit = this.GenerateImageToEdit(editAction, this._undoRedoService.GetLastEntry());
+
+            this.EditImage(imageToEdit, editAction);
+
+            this._undoRedoService.AddEntry(editAction);
+        }
+
+        private void Reset()
+        {
+            this._editingImage = null;
+
+            this.LeftPanelViewModel.ResetToDefaults();
+
+            this._undoRedoService.Clear();
+        }
+
+        private void UndoOrRedo(bool isUndo)
+        {
+            EditAction lastEditAction = this._undoRedoService.GetLastEntry();
+
+            if (isUndo)
+            {
+                this._undoRedoService.Undo();
+            }
+            else
+            {
+                this._undoRedoService.Redo();
+            }
+
+            EditAction editAction = this._undoRedoService.GetLastEntry();
+
+            if (isUndo && editAction == null)
+            {
+                editAction = new EditAction(EditActionKind.ResetToInitialState,
+                    new ImageConfiguration
+                    {
+                        Brightness = ImageProcessor.DefaultBrightness, Contrast = ImageProcessor.DefaultContrast,
+                        Opacity = ImageProcessor.DefaultOpacity, RotationAngle = ImageProcessor.DefaultRotationAngle
+                    });
+            }
+
+            BitmapSource imageToEdit = this.GenerateImageToEdit(editAction, lastEditAction);
+
+            this.EditImage(imageToEdit, editAction);
+
+            this.LeftPanelViewModel.SetBrightness(editAction.ImageConfiguration.Brightness);
+            this.LeftPanelViewModel.SetContrast(editAction.ImageConfiguration.Contrast);
+            this.LeftPanelViewModel.SetOpacity(editAction.ImageConfiguration.Opacity);
+            this.LeftPanelViewModel.SetRotationAngle(editAction.ImageConfiguration.RotationAngle);
         }
     }
 }

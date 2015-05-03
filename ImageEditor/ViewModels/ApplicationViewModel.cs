@@ -5,13 +5,16 @@
 
     using GalaSoft.MvvmLight;
 
+    using ImageEditor.Components.ImageProcessor.Concrete;
+    using ImageEditor.Models;
+    using ImageEditor.Services.Concrete;
     using ImageEditor.Utils;
 
     public class ApplicationViewModel : ObservableObject
     {
         public ApplicationViewModel()
         {
-            this.MainViewModel = new MainViewModel();
+            this.MainViewModel = new MainViewModel(new ImageProcessor(), new UndoRedoService<EditAction>());
 
             this.MainViewModel.PropertyChanged += this.MainViewModelOnPropertyChanged;
         }

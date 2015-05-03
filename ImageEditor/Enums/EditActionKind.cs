@@ -10,6 +10,8 @@
 
         ChangeOpacity = 3,
 
-        Rotate = 4
+        Rotate = 4,
+
+        ResetToInitialState = 5
     }
 }
