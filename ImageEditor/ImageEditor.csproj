@@ -81,9 +81,12 @@
     <Compile Include="Controls\NumericUpDownSlider\NumericUpDownSlider.xaml.cs">
       <DependentUpon>NumericUpDownSlider.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Enums\EditActionKind.cs" />
     <Compile Include="Messages\ErrorMessage.cs" />
     <Compile Include="Messages\SaveAsImageMessage.cs" />
     <Compile Include="Messages\OpenImageMessage.cs" />
+    <Compile Include="Models\EditAction.cs" />
+    <Compile Include="Models\ImageConfiguration.cs" />
     <Compile Include="Services\Abstract\IUndoRedoService.cs" />
     <Compile Include="Services\Concrete\UndoRedoService.cs" />
     <Compile Include="Utils\ExceptionHelper.cs" />
