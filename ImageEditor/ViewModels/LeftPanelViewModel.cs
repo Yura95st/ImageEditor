@@ -39,23 +39,7 @@
             }
             set
             {
-                if (value < this.MinBrightness)
-                {
-                    value = this.MinBrightness;
-                }
-                else if (value > this.MaxBrightness)
-                {
-                    value = this.MaxBrightness;
-                }
-
-                if (this._brightness != value)
-                {
-                    this._brightness = value;
-
-                    this._commands.ChangeBrightnessCommand.Execute(null);
-
-                    this.RaisePropertyChanged(() => this.Brightness);
-                }
+                this.SetBrightness(value, true);
             }
         }
 
@@ -99,23 +83,7 @@
             }
             set
             {
-                if (value < this.MinContrast)
-                {
-                    value = this.MinContrast;
-                }
-                else if (value > this.MaxContrast)
-                {
-                    value = this.MaxContrast;
-                }
-
-                if (this._contrast != value)
-                {
-                    this._contrast = value;
-
-                    this._commands.ChangeContrastCommand.Execute(null);
-
-                    this.RaisePropertyChanged(() => this.Contrast);
-                }
+                this.SetContrast(value, true);
             }
         }
 
@@ -191,23 +159,7 @@
             }
             set
             {
-                if (value < this.MinOpacity)
-                {
-                    value = this.MinOpacity;
-                }
-                else if (value > this.MaxOpacity)
-                {
-                    value = this.MaxOpacity;
-                }
-
-                if (this._opacity != value)
-                {
-                    this._opacity = value;
-
-                    this._commands.ChangeOpacityCommand.Execute(null);
-
-                    this.RaisePropertyChanged(() => this.Opacity);
-                }
+                this.SetOpacity(value, true);
             }
         }
 
@@ -219,37 +171,112 @@
             }
             set
             {
-                if (value < this.MinRotationAngle)
-                {
-                    value = this.MinRotationAngle;
-                }
-                else if (value > this.MaxRotationAngle)
-                {
-                    value = this.MaxRotationAngle;
-                }
-
-                if (this._rotationAngle != value)
-                {
-                    this._rotationAngle = value;
-
-                    this._commands.ChangeRotationAngleCommand.Execute(null);
-
-                    this.RaisePropertyChanged(() => this.RotationAngle);
-                }
+                this.SetRotationAngle(value, true);
             }
         }
 
         public void ResetToDefaults()
         {
-            this._brightness = ImageProcessor.DefaultBrightness;
-            this._contrast = ImageProcessor.DefaultContrast;
-            this._opacity = ImageProcessor.DefaultOpacity;
-            this._rotationAngle = ImageProcessor.DefaultRotationAngle;
+            this.SetBrightness(ImageProcessor.DefaultBrightness);
+            this.SetContrast(ImageProcessor.DefaultContrast);
+            this.SetOpacity(ImageProcessor.DefaultOpacity);
+            this.SetRotationAngle(ImageProcessor.DefaultRotationAngle);
+        }
 
-            this.RaisePropertyChanged(() => this.Brightness);
-            this.RaisePropertyChanged(() => this.Contrast);
-            this.RaisePropertyChanged(() => this.Opacity);
-            this.RaisePropertyChanged(() => this.RotationAngle);
+        public void SetBrightness(int newBrightness, bool withChangeCommandExecuting = false)
+        {
+            if (newBrightness < this.MinBrightness)
+            {
+                newBrightness = this.MinBrightness;
+            }
+            else if (newBrightness > this.MaxBrightness)
+            {
+                newBrightness = this.MaxBrightness;
+            }
+
+            if (this._brightness != newBrightness)
+            {
+                this._brightness = newBrightness;
+
+                if (withChangeCommandExecuting)
+                {
+                    this._commands.ChangeBrightnessCommand.Execute(null);
+                }
+
+                this.RaisePropertyChanged(() => this.Brightness);
+            }
+        }
+
+        public void SetContrast(int newContrast, bool withChangeCommandExecuting = false)
+        {
+            if (newContrast < this.MinContrast)
+            {
+                newContrast = this.MinContrast;
+            }
+            else if (newContrast > this.MaxContrast)
+            {
+                newContrast = this.MaxContrast;
+            }
+
+            if (this._contrast != newContrast)
+            {
+                this._contrast = newContrast;
+
+                if (withChangeCommandExecuting)
+                {
+                    this._commands.ChangeContrastCommand.Execute(null);
+                }
+
+                this.RaisePropertyChanged(() => this.Contrast);
+            }
+        }
+
+        public void SetOpacity(int newOpacity, bool withChangeCommandExecuting = false)
+        {
+            if (newOpacity < this.MinOpacity)
+            {
+                newOpacity = this.MinOpacity;
+            }
+            else if (newOpacity > this.MaxOpacity)
+            {
+                newOpacity = this.MaxOpacity;
+            }
+
+            if (this._opacity != newOpacity)
+            {
+                this._opacity = newOpacity;
+
+                if (withChangeCommandExecuting)
+                {
+                    this._commands.ChangeOpacityCommand.Execute(null);
+                }
+
+                this.RaisePropertyChanged(() => this.Opacity);
+            }
+        }
+
+        public void SetRotationAngle(int newRotationAngle, bool withChangeCommandExecuting = false)
+        {
+            if (newRotationAngle < this.MinRotationAngle)
+            {
+                newRotationAngle = this.MinRotationAngle;
+            }
+            else if (newRotationAngle > this.MaxRotationAngle)
+            {
+                newRotationAngle = this.MaxRotationAngle;
+            }
+
+            if (this._rotationAngle != newRotationAngle)
+            {
+                this._rotationAngle = newRotationAngle;
+
+                if (withChangeCommandExecuting)
+                {
+                    this._commands.ChangeRotationAngleCommand.Execute(null);
+                }
+
+                this.RaisePropertyChanged(() => this.RotationAngle);
+            }
         }
 
         private void ChangeBrightnessCommandOnCanExecuteChanged(object sender, EventArgs eventArgs)
