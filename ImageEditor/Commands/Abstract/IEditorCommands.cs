@@ -4,6 +4,11 @@
 
     public interface IEditorCommands
     {
+        ICommand CropCommand
+        {
+            get;
+        }
+
         ICommand IncreaseScaleValueCommand
         {
             get;

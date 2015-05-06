@@ -3,6 +3,7 @@
     using System;
     using System.ComponentModel;
     using System.IO;
+    using System.Windows;
     using System.Windows.Media.Imaging;
 
     using GalaSoft.MvvmLight;
@@ -119,6 +120,11 @@
             return this.IsImageOpened();
         }
 
+        public bool CanCrop()
+        {
+            return this.IsImageOpened();
+        }
+
         public bool CanRedo()
         {
             return this._undoRedoService.CanRedo();
@@ -136,7 +142,7 @@
 
         public bool CanShowCroppingRectangle()
         {
-            return false;
+            return this.IsImageOpened();
         }
 
         public bool CanUndo()
@@ -162,6 +168,13 @@
         public void ChangeRotationAngle()
         {
             this.PerformEditActionWithKind(EditActionKind.Rotate);
+        }
+
+        public void Crop()
+        {
+            this.PerformEditActionWithKind(EditActionKind.Crop);
+
+            Messenger.Default.Send(new HideCroppingRectangleMessage(this));
         }
 
         public void IncreaseScaleValue()
@@ -251,7 +264,7 @@
 
         public void ShowCroppingRectangle()
         {
-            throw new System.NotImplementedException();
+            Messenger.Default.Send(new ShowCroppingRectangleMessage(this));
         }
 
         public void Undo()
@@ -281,6 +294,13 @@
                 {
                     this.EditorViewModel.Image = this._imageProcessor.ChangeOpacity(imageToEdit,
                         editAction.ImageConfiguration.Opacity);
+                    break;
+                }
+
+                case EditActionKind.Crop:
+                {
+                    this.EditorViewModel.Image = this._imageProcessor.Crop(imageToEdit,
+                        editAction.ImageConfiguration.CroppingRect);
                     break;
                 }
 
@@ -316,12 +336,28 @@
             }
         }
 
+        private Rect GenerateCroppingRect()
+        {
+            Rect croppingRect = this.EditorViewModel.CroppingRect;
+
+            EditAction lastEditAction = this._undoRedoService.GetLastEntry();
+
+            if (lastEditAction != null)
+            {
+                croppingRect.Offset(lastEditAction.ImageConfiguration.CroppingRect.X,
+                    lastEditAction.ImageConfiguration.CroppingRect.Y);
+            }
+
+            return croppingRect;
+        }
+
         private ImageConfiguration GenerateImageConfiguration()
         {
             ImageConfiguration imageConfiguration = new ImageConfiguration
             {
                 Brightness = this.LeftPanelViewModel.Brightness, Contrast = this.LeftPanelViewModel.Contrast,
-                Opacity = this.LeftPanelViewModel.Opacity, RotationAngle = this.LeftPanelViewModel.RotationAngle
+                Opacity = this.LeftPanelViewModel.Opacity, RotationAngle = this.LeftPanelViewModel.RotationAngle,
+                CroppingRect = this.GenerateCroppingRect()
             };
 
             return imageConfiguration;
@@ -359,6 +395,11 @@
                         && editAction.ImageConfiguration.RotationAngle != ImageProcessor.DefaultRotationAngle)
                     {
                         bitmapSource = this._imageProcessor.Rotate(bitmapSource, editAction.ImageConfiguration.RotationAngle);
+                    }
+
+                    if (editAction.Kind != EditActionKind.Crop)
+                    {
+                        bitmapSource = this._imageProcessor.Crop(bitmapSource, editAction.ImageConfiguration.CroppingRect);
                     }
 
                     this._editingImage = bitmapSource;

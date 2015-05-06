@@ -1,5 +1,6 @@
 ﻿namespace ImageEditor.ViewModels
 {
+    using System.Windows;
     using System.Windows.Media.Imaging;
 
     using GalaSoft.MvvmLight;
@@ -10,6 +11,8 @@
     public class EditorViewModel : ObservableObject
     {
         private readonly IEditorCommands _commands;
+
+        private Rect _croppingRect;
 
         private BitmapSource _image;
 
@@ -35,6 +38,14 @@
             }
         }
 
+        public Rect CroppingRect
+        {
+            get
+            {
+                return this._croppingRect;
+            }
+        }
+
         public BitmapSource Image
         {
             get
@@ -48,6 +59,7 @@
                     this._image = value;
 
                     this.UpdateImageHeightAndWidth();
+                    this.UpdateCroppingRect();
 
                     this.RaisePropertyChanged(() => this.Image);
                 }
@@ -72,6 +84,17 @@
             private set;
         }
 
+        public void SetCroppingRect(Rect croppingRect)
+        {
+            this._croppingRect.Size = new Size(croppingRect.Width / this.ImageScaleRatio,
+                croppingRect.Height / this.ImageScaleRatio);
+
+            this._croppingRect.Location = new Point(croppingRect.X / this.ImageScaleRatio,
+                croppingRect.Y / this.ImageScaleRatio);
+
+            this.RaisePropertyChanged(() => this.CroppingRect);
+        }
+
         public void SetImageScaleRatio(double imageScaleRatio)
         {
             Guard.GreaterThanZero(imageScaleRatio, "imageScaleRatio");
@@ -79,6 +102,14 @@
             this.ImageScaleRatio = imageScaleRatio;
 
             this.UpdateImageHeightAndWidth();
+        }
+
+        private void UpdateCroppingRect()
+        {
+            this._croppingRect.Location = new Point(0, 0);
+            this._croppingRect.Size = new Size(this._image.PixelWidth, this._image.PixelHeight);
+
+            this.RaisePropertyChanged(() => this.CroppingRect);
         }
 
         private void UpdateImageHeightAndWidth()

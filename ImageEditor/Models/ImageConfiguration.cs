@@ -1,5 +1,7 @@
 ﻿namespace ImageEditor.Models
 {
+    using System.Windows;
+
     public class ImageConfiguration
     {
         public int Brightness
@@ -9,6 +11,12 @@
         }
 
         public int Contrast
+        {
+            get;
+            set;
+        }
+
+        public Rect CroppingRect
         {
             get;
             set;

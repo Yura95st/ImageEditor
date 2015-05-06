@@ -20,6 +20,8 @@
 
         private ICommand _changeRotationAngleCommand;
 
+        private ICommand _cropCommand;
+
         private ICommand _increaseScaleValueCommand;
 
         private ICommand _openCommand;
@@ -46,6 +48,19 @@
         }
 
         #region IMainCommands Members
+
+        public ICommand CropCommand
+        {
+            get
+            {
+                if (this._cropCommand == null)
+                {
+                    this._cropCommand = new RelayCommand(this._viewModel.Crop, this._viewModel.CanCrop);
+                }
+
+                return this._cropCommand;
+            }
+        }
 
         public ICommand IncreaseScaleValueCommand
         {

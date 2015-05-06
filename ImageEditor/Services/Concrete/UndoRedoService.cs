@@ -80,7 +80,7 @@
         {
             if (!this.CanUndo())
             {
-                throw new InvalidOperationException("Redo operation is forbidden.");
+                throw new InvalidOperationException("Undo operation is forbidden.");
             }
 
             this._lastEntryIndex--;

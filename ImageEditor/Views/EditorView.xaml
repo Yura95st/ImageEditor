@@ -8,20 +8,27 @@
 
     <Border Margin="5,5,5,5"
             BorderBrush="{StaticResource EditorBorderBrush}"
-            BorderThickness="1">
+            BorderThickness="1"
+            Focusable="False">
 
         <ScrollViewer HorizontalScrollBarVisibility="Visible"
-                      PreviewMouseWheel="Zoom_MouseWheel"
-                      VerticalScrollBarVisibility="Visible">
+                      PreviewMouseWheel="ScrollViewer_OnPreviewMouseWheel"
+                      VerticalScrollBarVisibility="Visible"
+                      Focusable="False">
 
             <Grid Width="{Binding Path=ImageWidth,
                                   Mode=OneWay}"
                   Height="{Binding Path=ImageHeight,
                                    Mode=OneWay}"
                   Margin="30,30"
+                  Focusable="False"
                   Background="{StaticResource EditorImageGridBackgroundBrush}">
-                <Image HorizontalAlignment="Center"
+                <Image x:Name="Image"
+                       HorizontalAlignment="Center"
                        VerticalAlignment="Center"
+                       Focusable="True"
+                       LostFocus="Image_OnLostFocus"
+                       PreviewKeyDown="Image_OnPreviewKeyDown"
                        Source="{Binding Path=Image,
                                         Mode=OneWay}"
                        Stretch="Fill" />

@@ -10,8 +10,10 @@
 
         ChangeOpacity = 3,
 
-        Rotate = 4,
+        Crop = 4,
 
-        ResetToInitialState = 5
+        ResetToInitialState = 5,
+
+        Rotate = 6
     }
 }
