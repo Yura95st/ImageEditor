@@ -4,11 +4,6 @@
 
     public interface ITopPanelCommands
     {
-        ICommand CropCommand
-        {
-            get;
-        }
-
         ICommand OpenCommand
         {
             get;
@@ -25,6 +20,11 @@
         }
 
         ICommand SaveCommand
+        {
+            get;
+        }
+
+        ICommand ShowCroppingRectangleCommand
         {
             get;
         }

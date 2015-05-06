@@ -119,11 +119,6 @@
             return this.IsImageOpened();
         }
 
-        public bool CanCrop()
-        {
-            return false;
-        }
-
         public bool CanRedo()
         {
             return this._undoRedoService.CanRedo();
@@ -137,6 +132,11 @@
         public bool CanSaveAs()
         {
             return this.IsImageOpened();
+        }
+
+        public bool CanShowCroppingRectangle()
+        {
+            return false;
         }
 
         public bool CanUndo()
@@ -162,11 +162,6 @@
         public void ChangeRotationAngle()
         {
             this.PerformEditActionWithKind(EditActionKind.Rotate);
-        }
-
-        public void Crop()
-        {
-            throw new System.NotImplementedException();
         }
 
         public void IncreaseScaleValue()
@@ -252,6 +247,11 @@
                 });
 
             Messenger.Default.Send(message);
+        }
+
+        public void ShowCroppingRectangle()
+        {
+            throw new System.NotImplementedException();
         }
 
         public void Undo()

@@ -20,8 +20,6 @@
 
         private ICommand _changeRotationAngleCommand;
 
-        private ICommand _cropCommand;
-
         private ICommand _increaseScaleValueCommand;
 
         private ICommand _openCommand;
@@ -35,6 +33,8 @@
         private ICommand _saveAsCommand;
 
         private ICommand _saveCommand;
+
+        private ICommand _showCroppingRectangleCommand;
 
         private ICommand _undoCommand;
 
@@ -80,7 +80,7 @@
                 if (this._resetScaleValueToDefaultCommand == null)
                 {
                     this._resetScaleValueToDefaultCommand = new RelayCommand(this._viewModel.ResetScaleValueToDefault,
-                    () => true);
+                        () => true);
                 }
 
                 return this._resetScaleValueToDefaultCommand;
@@ -94,7 +94,7 @@
                 if (this._changeBrightnessCommand == null)
                 {
                     this._changeBrightnessCommand = new RelayCommand(this._viewModel.ChangeBrightness,
-                    this._viewModel.CanChangeBrightness);
+                        this._viewModel.CanChangeBrightness);
                 }
 
                 return this._changeBrightnessCommand;
@@ -108,7 +108,7 @@
                 if (this._changeContrastCommand == null)
                 {
                     this._changeContrastCommand = new RelayCommand(this._viewModel.ChangeContrast,
-                    this._viewModel.CanChangeContrast);
+                        this._viewModel.CanChangeContrast);
                 }
 
                 return this._changeContrastCommand;
@@ -122,7 +122,7 @@
                 if (this._changeOpacityCommand == null)
                 {
                     this._changeOpacityCommand = new RelayCommand(this._viewModel.ChangeOpacity,
-                    this._viewModel.CanChangeOpacity);
+                        this._viewModel.CanChangeOpacity);
                 }
 
                 return this._changeOpacityCommand;
@@ -136,23 +136,10 @@
                 if (this._changeRotationAngleCommand == null)
                 {
                     this._changeRotationAngleCommand = new RelayCommand(this._viewModel.ChangeRotationAngle,
-                    this._viewModel.CanChangeRotationAngle);
+                        this._viewModel.CanChangeRotationAngle);
                 }
 
                 return this._changeRotationAngleCommand;
-            }
-        }
-
-        public ICommand CropCommand
-        {
-            get
-            {
-                if (this._cropCommand == null)
-                {
-                    this._cropCommand = new RelayCommand(this._viewModel.Crop, this._viewModel.CanCrop);
-                }
-
-                return this._cropCommand;
             }
         }
 
@@ -205,6 +192,20 @@
                 }
 
                 return this._saveCommand;
+            }
+        }
+
+        public ICommand ShowCroppingRectangleCommand
+        {
+            get
+            {
+                if (this._showCroppingRectangleCommand == null)
+                {
+                    this._showCroppingRectangleCommand = new RelayCommand(this._viewModel.ShowCroppingRectangle,
+                        this._viewModel.CanShowCroppingRectangle);
+                }
+
+                return this._showCroppingRectangleCommand;
             }
         }
 

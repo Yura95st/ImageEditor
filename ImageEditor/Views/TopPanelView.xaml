@@ -45,7 +45,7 @@
 
                 <Border Style="{StaticResource TopPanelDivider}" />
 
-                <Button Command="{Binding Commands.CropCommand}"
+                <Button Command="{Binding Commands.ShowCroppingRectangleCommand}"
                         Content="Crop"
                         Style="{StaticResource CropTopPanelButton}"
                         ToolTip="Crop" />
