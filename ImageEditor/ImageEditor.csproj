@@ -78,6 +78,12 @@
     <Compile Include="Components\ImageProcessor\Concrete\ImageProcessor.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Controls\CroppingAdorner\CroppingAdorner.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controls\CroppingAdorner\PuncturedRect.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Controls\NumericUpDownSlider\NumericUpDownSlider.xaml.cs">
       <DependentUpon>NumericUpDownSlider.xaml</DependentUpon>
     </Compile>
