@@ -70,34 +70,27 @@
             return this.AdjustImage(image, null, null, newOpacity);
         }
 
-        public BitmapSource Crop(BitmapSource image, Point leftTopCornerPoint, double width, double height)
+        public BitmapSource Crop(BitmapSource image, Rect croppingRectangle)
         {
             Guard.NotNull(image, "image");
-            Guard.GreaterThanZero(width, "width");
-            Guard.GreaterThanZero(height, "height");
 
-            if (leftTopCornerPoint.X < 0 || leftTopCornerPoint.Y < 0 || leftTopCornerPoint.X > image.Width
-            || leftTopCornerPoint.Y > image.Height)
+            Rect imageRectangle = new Rect(new Size(image.PixelWidth, image.PixelHeight));
+
+            if (croppingRectangle.Width < 1 || croppingRectangle.Height < 1)
             {
-                throw new ArgumentOutOfRangeException("leftTopCornerPoint",
-                "LeftTopCornerPoint must be within the boundaries of the image.");
+                throw new ArgumentOutOfRangeException("croppingRectangle",
+                    "CroppingRectangle's dimensions can't be less than 1x1.");
             }
 
-            double maxWidth = image.Width - leftTopCornerPoint.X;
-            double maxHeight = image.Height - leftTopCornerPoint.Y;
-
-            if (width > maxWidth)
+            if (!imageRectangle.Contains(croppingRectangle))
             {
-                width = maxWidth;
-            }
-
-            if (height > maxHeight)
-            {
-                height = maxHeight;
+                throw new ArgumentOutOfRangeException("croppingRectangle",
+                    "CroppingRectangle must be within the boundaries of the image.");
             }
 
             CroppedBitmap result = new CroppedBitmap(image,
-            new Int32Rect((int)leftTopCornerPoint.X, (int)leftTopCornerPoint.Y, (int)height, (int)width));
+                new Int32Rect((int)croppingRectangle.X, (int)croppingRectangle.Y, (int)croppingRectangle.Width,
+                    (int)croppingRectangle.Height));
 
             return result;
         }
@@ -109,8 +102,8 @@
             if (angle < ImageProcessor.MinRotationAngle || angle > ImageProcessor.MaxRotationAngle)
             {
                 throw new ArgumentOutOfRangeException("angle",
-                string.Format("Angle must be between {0} and {1}.", ImageProcessor.MinRotationAngle,
-                ImageProcessor.MaxRotationAngle));
+                    string.Format("Angle must be between {0} and {1}.", ImageProcessor.MinRotationAngle,
+                        ImageProcessor.MaxRotationAngle));
             }
 
             int oldWidth = image.PixelWidth;
@@ -138,14 +131,14 @@
 
             // Calculate newWidth and newHeight values
             int newWidth =
-            (int)
-            Math.Max(Math.Abs(newTopLeftPoint.X - rotationCenterPoint.X),
-            Math.Abs(newBottomLeftPoint.X - rotationCenterPoint.X)) * 2;
+                (int)
+                    Math.Max(Math.Abs(newTopLeftPoint.X - rotationCenterPoint.X),
+                        Math.Abs(newBottomLeftPoint.X - rotationCenterPoint.X)) * 2;
 
             int newHeight =
-            (int)
-            Math.Max(Math.Abs(newTopLeftPoint.Y - rotationCenterPoint.Y),
-            Math.Abs(newBottomLeftPoint.Y - rotationCenterPoint.Y)) * 2;
+                (int)
+                    Math.Max(Math.Abs(newTopLeftPoint.Y - rotationCenterPoint.Y),
+                        Math.Abs(newBottomLeftPoint.Y - rotationCenterPoint.Y)) * 2;
 
             int newStride = (newWidth * bitsPerPixel + 7) / 8;
 
@@ -193,7 +186,7 @@
             }
 
             BitmapSource result = BitmapSource.Create(newWidth, newHeight, image.DpiX, image.DpiY, PixelFormats.Bgra32,
-            image.Palette, newImage, newStride);
+                image.Palette, newImage, newStride);
 
             return result;
         }
@@ -219,25 +212,27 @@
             Guard.NotNull(image, "image");
 
             if (newBrightness.HasValue
-            && (newBrightness.Value < ImageProcessor.MinBrightness || newBrightness.Value > ImageProcessor.MaxBrightness))
+                && (newBrightness.Value < ImageProcessor.MinBrightness || newBrightness.Value > ImageProcessor.MaxBrightness))
             {
                 throw new ArgumentOutOfRangeException("newBrightness",
-                string.Format("Brightness must be between {0} and {1}.", ImageProcessor.MinBrightness,
-                ImageProcessor.MaxBrightness));
+                    string.Format("Brightness must be between {0} and {1}.", ImageProcessor.MinBrightness,
+                        ImageProcessor.MaxBrightness));
             }
 
             if (newContrast.HasValue
-            && (newContrast.Value < ImageProcessor.MinContrast || newContrast.Value > ImageProcessor.MaxContrast))
+                && (newContrast.Value < ImageProcessor.MinContrast || newContrast.Value > ImageProcessor.MaxContrast))
             {
                 throw new ArgumentOutOfRangeException("newContrast",
-                string.Format("Contrast must be between {0} and {1}.", ImageProcessor.MinContrast, ImageProcessor.MaxContrast));
+                    string.Format("Contrast must be between {0} and {1}.", ImageProcessor.MinContrast,
+                        ImageProcessor.MaxContrast));
             }
 
             if (newOpacity.HasValue
-            && (newOpacity.Value < ImageProcessor.MinOpacity || newOpacity.Value > ImageProcessor.MaxOpacity))
+                && (newOpacity.Value < ImageProcessor.MinOpacity || newOpacity.Value > ImageProcessor.MaxOpacity))
             {
                 throw new ArgumentOutOfRangeException("newOpacity",
-                string.Format("Opacity must be between {0} and {1}.", ImageProcessor.MinOpacity, ImageProcessor.MaxOpacity));
+                    string.Format("Opacity must be between {0} and {1}.", ImageProcessor.MinOpacity,
+                        ImageProcessor.MaxOpacity));
             }
 
             int pixelsCount = image.PixelWidth * image.PixelHeight;
@@ -283,7 +278,7 @@
             }
 
             BitmapSource result = BitmapSource.Create(image.PixelWidth, image.PixelHeight, image.DpiX, image.DpiY,
-            PixelFormats.Bgra32, image.Palette, pixels, stride);
+                PixelFormats.Bgra32, image.Palette, pixels, stride);
 
             return result;
         }
@@ -341,12 +336,12 @@
             {
                 X =
                     rotationCenterPoint.X
-                    + Math.Round((pointToRotate.X - rotationCenterPoint.X) * cos
-                    + (pointToRotate.Y - rotationCenterPoint.Y) * sin),
+                        + Math.Round((pointToRotate.X - rotationCenterPoint.X) * cos
+                            + (pointToRotate.Y - rotationCenterPoint.Y) * sin),
                 Y =
                     rotationCenterPoint.Y
-                    + Math.Round((pointToRotate.Y - rotationCenterPoint.Y) * cos
-                    - (pointToRotate.X - rotationCenterPoint.X) * sin)
+                        + Math.Round((pointToRotate.Y - rotationCenterPoint.Y) * cos
+                            - (pointToRotate.X - rotationCenterPoint.X) * sin)
             };
 
 

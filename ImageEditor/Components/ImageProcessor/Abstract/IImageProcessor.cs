@@ -25,11 +25,9 @@
 
         /// <summary> Cuts out a rectangular sub-image of specified size from specified image starting from the given point.</summary>
         /// <param name="image">The image.</param>
-        /// <param name="leftTopCornerPoint">The sub-image's left top corner point.</param>
-        /// <param name="width">The width of sub-image.</param>
-        /// <param name="height">The height of sub-image.</param>
+        /// <param name="croppingRectangle">The cropping rectangle.</param>
         /// <returns>A rectangular sub-image.</returns>
-        BitmapSource Crop(BitmapSource image, Point leftTopCornerPoint, double width, double height);
+        BitmapSource Crop(BitmapSource image, Rect croppingRectangle);
 
         /// <summary>Rotates the specified image to the specified angle.</summary>
         /// <param name="image">The image.</param>
