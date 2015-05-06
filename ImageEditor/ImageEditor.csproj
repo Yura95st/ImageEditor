@@ -83,6 +83,8 @@
     </Compile>
     <Compile Include="Enums\EditActionKind.cs" />
     <Compile Include="Messages\ErrorMessage.cs" />
+    <Compile Include="Messages\HideCroppingRectangleMessage.cs" />
+    <Compile Include="Messages\ShowCroppingRectangleMessage.cs" />
     <Compile Include="Messages\SaveAsImageMessage.cs" />
     <Compile Include="Messages\OpenImageMessage.cs" />
     <Compile Include="Models\EditAction.cs" />
