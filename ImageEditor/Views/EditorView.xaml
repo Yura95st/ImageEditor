@@ -11,19 +11,34 @@
             BorderThickness="1"
             Focusable="False">
 
-        <ScrollViewer HorizontalScrollBarVisibility="Visible"
+        <ScrollViewer Focusable="False"
+                      HorizontalScrollBarVisibility="Visible"
                       PreviewMouseWheel="ScrollViewer_OnPreviewMouseWheel"
-                      VerticalScrollBarVisibility="Visible"
-                      Focusable="False">
+                      VerticalScrollBarVisibility="Visible">
 
-            <Grid Width="{Binding Path=ImageWidth,
+            <Grid Width="{Binding Path=BackgroundLayerWidth,
                                   Mode=OneWay}"
-                  Height="{Binding Path=ImageHeight,
+                  Height="{Binding Path=BackgroundLayerHeight,
                                    Mode=OneWay}"
                   Margin="30,30"
-                  Focusable="False"
-                  Background="{StaticResource EditorImageGridBackgroundBrush}">
+                  Background="{StaticResource EditorImageGridBackgroundBrush}"
+                  Focusable="False">
+
+                <Image Width="{Binding Path=BackgroundImageWidth,
+                                       Mode=OneWay}"
+                       Height="{Binding Path=BackgroundImageHeight,
+                                        Mode=OneWay}"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       Source="{Binding Path=BackgroundImage,
+                                        Mode=OneWay}"
+                       Stretch="Fill" />
+
                 <Image x:Name="Image"
+                       Width="{Binding Path=ImageWidth,
+                                       Mode=OneWay}"
+                       Height="{Binding Path=ImageHeight,
+                                        Mode=OneWay}"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        Focusable="True"

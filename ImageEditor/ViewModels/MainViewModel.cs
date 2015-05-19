@@ -182,6 +182,29 @@
             this.FooterViewModel.IncreaseScaleValue();
         }
 
+        public void OpenBackground()
+        {
+            OpenImageMessage message = new OpenImageMessage(this, imageFilePath =>
+            {
+                if (!string.IsNullOrEmpty(imageFilePath))
+                {
+                    try
+                    {
+                        this.EditorViewModel.BackgroundImage = ImageHelper.GetBitmapSourceFromFile(imageFilePath);
+                    }
+                    catch
+                    {
+                        Messenger.Default.Send(new ErrorMessage(this,
+                            string.Format(
+                                "{0}{1}ImageEditor can't read this file.{1}This is not a valid bitmap file or its format is not currently supported.",
+                                imageFilePath, Environment.NewLine)));
+                    }
+                }
+            });
+
+            Messenger.Default.Send(message);
+        }
+
         public void Open()
         {
             OpenImageMessage message = new OpenImageMessage(this, imageFilePath =>
@@ -437,11 +460,12 @@
         {
             EditAction editAction = new EditAction(editActionKind, this.GenerateImageConfiguration());
 
-            BitmapSource imageToEdit = this.GenerateImageToEdit(editAction, this._undoRedoService.GetLastEntry());
+            //BitmapSource imageToEdit = this.GenerateImageToEdit(editAction, this._undoRedoService.GetLastEntry());
+            BitmapSource imageToEdit = this._originalImage;
 
             this.EditImage(imageToEdit, editAction);
 
-            this._undoRedoService.AddEntry(editAction);
+            //this._undoRedoService.AddEntry(editAction);
         }
 
         private void Reset()

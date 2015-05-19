@@ -24,6 +24,8 @@
 
         private ICommand _increaseScaleValueCommand;
 
+        private ICommand _openBackgroundCommand;
+
         private ICommand _openCommand;
 
         private ICommand _redoCommand;
@@ -155,6 +157,19 @@
                 }
 
                 return this._changeRotationAngleCommand;
+            }
+        }
+
+        public ICommand OpenBackgroundCommand
+        {
+            get
+            {
+                if (this._openBackgroundCommand == null)
+                {
+                    this._openBackgroundCommand = new RelayCommand(this._viewModel.OpenBackground, () => true);
+                }
+
+                return this._openBackgroundCommand;
             }
         }
 

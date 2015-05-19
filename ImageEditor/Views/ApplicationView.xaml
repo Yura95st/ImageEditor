@@ -16,6 +16,7 @@
         <KeyBinding Command="{Binding MainViewModel.Commands.ResetScaleValueToDefaultCommand}" Gesture="Ctrl+0" />
 
         <KeyBinding Command="{Binding MainViewModel.Commands.OpenCommand}" Gesture="Ctrl+O" />
+        <KeyBinding Command="{Binding MainViewModel.Commands.OpenBackgroundCommand}" Gesture="Ctrl+Shift+O" />
 
         <KeyBinding Command="{Binding MainViewModel.Commands.SaveCommand}" Gesture="Ctrl+S" />
         <KeyBinding Command="{Binding MainViewModel.Commands.SaveAsCommand}" Gesture="Ctrl+Shift+S" />

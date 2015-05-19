@@ -1,5 +1,7 @@
 ﻿namespace ImageEditor.ViewModels
 {
+    using System;
+    using System.ComponentModel;
     using System.Windows;
     using System.Windows.Media.Imaging;
 
@@ -12,6 +14,8 @@
     {
         private readonly IEditorCommands _commands;
 
+        private BitmapSource _backgroundImage;
+
         private Rect _croppingRect;
 
         private BitmapSource _image;
@@ -22,12 +26,65 @@
 
             this._commands = commands;
 
+            this._backgroundImage = null;
             this._image = null;
+
+            this.BackgroundImageHeight = 0;
+            this.BackgroundImageWidth = 0;
 
             this.ImageHeight = 0;
             this.ImageWidth = 0;
 
             this.ImageScaleRatio = 1;
+
+            this.PropertyChanged += this.OnPropertyChanged;
+        }
+
+        public BitmapSource BackgroundImage
+        {
+            get
+            {
+                return this._backgroundImage;
+            }
+            set
+            {
+                if (this._backgroundImage != value)
+                {
+                    this._backgroundImage = value;
+
+                    this.UpdateBackgroundImageHeightAndWidth();
+
+                    this.RaisePropertyChanged(() => this.BackgroundImage);
+                }
+            }
+        }
+
+        public double BackgroundImageHeight
+        {
+            get;
+            private set;
+        }
+
+        public double BackgroundImageWidth
+        {
+            get;
+            private set;
+        }
+
+        public double BackgroundLayerHeight
+        {
+            get
+            {
+                return Math.Max(this.ImageHeight, this.BackgroundImageHeight);
+            }
+        }
+
+        public double BackgroundLayerWidth
+        {
+            get
+            {
+                return Math.Max(this.ImageWidth, this.BackgroundImageWidth);
+            }
         }
 
         public IEditorCommands Commands
@@ -101,7 +158,66 @@
 
             this.ImageScaleRatio = imageScaleRatio;
 
+            this.UpdateBackgroundImageHeightAndWidth();
             this.UpdateImageHeightAndWidth();
+        }
+
+        private static double GetScaledImageHeight(BitmapSource image, double imageScaleRatio)
+        {
+            double newImageHeight = 0;
+
+            if (image != null)
+            {
+                newImageHeight = image.PixelHeight * imageScaleRatio;
+            }
+
+            return newImageHeight;
+        }
+
+        private static double GetScaledImageWidth(BitmapSource image, double imageScaleRatio)
+        {
+            double newImageWidth = 0;
+
+            if (image != null)
+            {
+                newImageWidth = image.PixelWidth * imageScaleRatio;
+            }
+
+            return newImageWidth;
+        }
+
+        private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == ExpressionHelper.GetPropertyName(() => this.BackgroundImageHeight)
+                || e.PropertyName == ExpressionHelper.GetPropertyName(() => this.ImageHeight))
+            {
+                this.RaisePropertyChanged(() => this.BackgroundLayerHeight);
+            }
+            else if (e.PropertyName == ExpressionHelper.GetPropertyName(() => this.BackgroundImageWidth)
+                || e.PropertyName == ExpressionHelper.GetPropertyName(() => this.ImageWidth))
+            {
+                this.RaisePropertyChanged(() => this.BackgroundLayerWidth);
+            }
+        }
+
+        private void UpdateBackgroundImageHeightAndWidth()
+        {
+            double newImageHeight = EditorViewModel.GetScaledImageHeight(this._backgroundImage, this.ImageScaleRatio);
+            double newImageWidth = EditorViewModel.GetScaledImageWidth(this._backgroundImage, this.ImageScaleRatio);
+
+            if (!this.BackgroundImageHeight.Equals(newImageHeight))
+            {
+                this.BackgroundImageHeight = newImageHeight;
+
+                this.RaisePropertyChanged(() => this.BackgroundImageHeight);
+            }
+
+            if (!this.BackgroundImageWidth.Equals(newImageWidth))
+            {
+                this.BackgroundImageWidth = newImageWidth;
+
+                this.RaisePropertyChanged(() => this.BackgroundImageWidth);
+            }
         }
 
         private void UpdateCroppingRect()

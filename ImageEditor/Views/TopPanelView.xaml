@@ -21,6 +21,11 @@
                         Style="{StaticResource OpenTopPanelButton}"
                         ToolTip="Open (Ctrl+O)" />
 
+                <Button Command="{Binding Commands.OpenBackgroundCommand}"
+                        Content="Open Background"
+                        Style="{StaticResource OpenTopPanelButton}"
+                        ToolTip="Open Background (Ctrl+Shift+O)" />
+
                 <Button Command="{Binding Commands.SaveCommand}"
                         Content="Save"
                         Style="{StaticResource SaveTopPanelButton}"

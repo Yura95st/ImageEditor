@@ -4,6 +4,11 @@
 
     public interface ITopPanelCommands
     {
+        ICommand OpenBackgroundCommand
+        {
+            get;
+        }
+
         ICommand OpenCommand
         {
             get;
