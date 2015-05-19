@@ -14,6 +14,8 @@
 
         ResetToInitialState = 5,
 
-        Rotate = 6
+        Resize = 6,
+
+        Rotate = 7
     }
 }

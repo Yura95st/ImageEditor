@@ -130,6 +130,11 @@
             return this._undoRedoService.CanRedo();
         }
 
+        public bool CanResize()
+        {
+            return this.IsImageOpened();
+        }
+
         public bool CanSave()
         {
             return this.IsImageOpened();
@@ -182,7 +187,7 @@
             this.FooterViewModel.IncreaseScaleValue();
         }
 
-        public void OpenBackground()
+        public void Open()
         {
             OpenImageMessage message = new OpenImageMessage(this, imageFilePath =>
             {
@@ -190,7 +195,13 @@
                 {
                     try
                     {
-                        this.EditorViewModel.BackgroundImage = ImageHelper.GetBitmapSourceFromFile(imageFilePath);
+                        this.Reset();
+
+                        this._originalImage = ImageHelper.GetBitmapSourceFromFile(imageFilePath);
+
+                        this.OpenedImageFilePath = imageFilePath;
+
+                        this.EditorViewModel.Image = this._originalImage;
                     }
                     catch
                     {
@@ -205,7 +216,7 @@
             Messenger.Default.Send(message);
         }
 
-        public void Open()
+        public void OpenBackground()
         {
             OpenImageMessage message = new OpenImageMessage(this, imageFilePath =>
             {
@@ -213,13 +224,7 @@
                 {
                     try
                     {
-                        this._originalImage = ImageHelper.GetBitmapSourceFromFile(imageFilePath);
-
-                        this.OpenedImageFilePath = imageFilePath;
-
-                        this.EditorViewModel.Image = this._originalImage;
-
-                        this.Reset();
+                        this.EditorViewModel.BackgroundImage = ImageHelper.GetBitmapSourceFromFile(imageFilePath);
                     }
                     catch
                     {
@@ -247,6 +252,11 @@
         public void ResetScaleValueToDefault()
         {
             this.FooterViewModel.ResetScaleValueToDefault();
+        }
+
+        public void Resize()
+        {
+            this.PerformEditActionWithKind(EditActionKind.Resize);
         }
 
         public void Save()
@@ -327,6 +337,13 @@
                     break;
                 }
 
+                case EditActionKind.Resize:
+                {
+                    this.EditorViewModel.Image = this._imageProcessor.Resize(imageToEdit, editAction.ImageConfiguration.Width,
+                        editAction.ImageConfiguration.Height);
+                    break;
+                }
+
                 case EditActionKind.Rotate:
                 {
                     this.EditorViewModel.Image = this._imageProcessor.Rotate(imageToEdit,
@@ -348,6 +365,9 @@
             {
                 this.FooterViewModel.ImageWidth = this.EditorViewModel.Image.PixelWidth;
                 this.FooterViewModel.ImageHeight = this.EditorViewModel.Image.PixelHeight;
+
+                this.LeftPanelViewModel.SetWidth(this.EditorViewModel.Image.PixelWidth);
+                this.LeftPanelViewModel.SetHeight(this.EditorViewModel.Image.PixelHeight);
             }
         }
 
@@ -380,6 +400,7 @@
             {
                 Brightness = this.LeftPanelViewModel.Brightness, Contrast = this.LeftPanelViewModel.Contrast,
                 Opacity = this.LeftPanelViewModel.Opacity, RotationAngle = this.LeftPanelViewModel.RotationAngle,
+                Height = this.LeftPanelViewModel.Height, Width = this.LeftPanelViewModel.Width,
                 CroppingRect = this.GenerateCroppingRect()
             };
 

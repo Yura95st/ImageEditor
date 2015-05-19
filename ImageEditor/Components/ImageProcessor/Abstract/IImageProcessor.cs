@@ -29,6 +29,13 @@
         /// <returns>A rectangular sub-image.</returns>
         BitmapSource Crop(BitmapSource image, Rect croppingRectangle);
 
+        /// <summary>Resizes the specified image.</summary>
+        /// <param name="image">The image.</param>
+        /// <param name="newWidth">The new width.</param>
+        /// <param name="newHeight">The new height.</param>
+        /// <returns>The resized image.</returns>
+        BitmapSource Resize(BitmapSource image, int newWidth, int newHeight);
+
         /// <summary>Rotates the specified image to the specified angle.</summary>
         /// <param name="image">The image.</param>
         /// <param name="angle">The rotation angle.</param>

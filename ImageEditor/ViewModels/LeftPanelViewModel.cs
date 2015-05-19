@@ -16,15 +16,24 @@
 
         private int _contrast;
 
+        private int _height;
+
         private int _opacity;
 
         private int _rotationAngle;
+
+        private int _width;
 
         public LeftPanelViewModel(ILeftPanelCommands commands)
         {
             Guard.NotNull(commands, "commands");
 
             this._commands = commands;
+
+            this.MinHeight = 1;
+            this.MinWidth = 1;
+            this.MaxHeight = 99999;
+            this.MaxWidth = 99999;
 
             this.SubscribeToCommandsCanExecuteChanged();
 
@@ -75,6 +84,14 @@
             }
         }
 
+        public bool CanResize
+        {
+            get
+            {
+                return this._commands.ResizeCommand.CanExecute(null);
+            }
+        }
+
         public int Contrast
         {
             get
@@ -84,6 +101,18 @@
             set
             {
                 this.SetContrast(value, true);
+            }
+        }
+
+        public int Height
+        {
+            get
+            {
+                return this._height;
+            }
+            set
+            {
+                this.SetHeight(value, true);
             }
         }
 
@@ -103,6 +132,12 @@
             }
         }
 
+        public int MaxHeight
+        {
+            get;
+            private set;
+        }
+
         public int MaxOpacity
         {
             get
@@ -117,6 +152,12 @@
             {
                 return ImageProcessor.MaxRotationAngle;
             }
+        }
+
+        public int MaxWidth
+        {
+            get;
+            private set;
         }
 
         public int MinBrightness
@@ -135,6 +176,12 @@
             }
         }
 
+        public int MinHeight
+        {
+            get;
+            private set;
+        }
+
         public int MinOpacity
         {
             get
@@ -149,6 +196,12 @@
             {
                 return ImageProcessor.MinRotationAngle;
             }
+        }
+
+        public int MinWidth
+        {
+            get;
+            private set;
         }
 
         public int Opacity
@@ -175,12 +228,27 @@
             }
         }
 
+        public int Width
+        {
+            get
+            {
+                return this._width;
+            }
+            set
+            {
+                this.SetWidth(value, true);
+            }
+        }
+
         public void ResetToDefaults()
         {
             this.SetBrightness(ImageProcessor.DefaultBrightness);
             this.SetContrast(ImageProcessor.DefaultContrast);
             this.SetOpacity(ImageProcessor.DefaultOpacity);
             this.SetRotationAngle(ImageProcessor.DefaultRotationAngle);
+
+            this.SetHeight(this.MinHeight);
+            this.SetWidth(this.MinWidth);
         }
 
         public void SetBrightness(int newBrightness, bool withChangeCommandExecuting = false)
@@ -228,6 +296,30 @@
                 }
 
                 this.RaisePropertyChanged(() => this.Contrast);
+            }
+        }
+
+        public void SetHeight(int newHeight, bool withChangeCommandExecuting = false)
+        {
+            if (newHeight < this.MinHeight)
+            {
+                newHeight = this.MinHeight;
+            }
+            else if (newHeight > this.MaxHeight)
+            {
+                newHeight = this.MaxHeight;
+            }
+
+            if (this._height != newHeight)
+            {
+                this._height = newHeight;
+
+                if (withChangeCommandExecuting)
+                {
+                    this._commands.ResizeCommand.Execute(null);
+                }
+
+                this.RaisePropertyChanged(() => this.Height);
             }
         }
 
@@ -279,6 +371,30 @@
             }
         }
 
+        public void SetWidth(int newWidth, bool withChangeCommandExecuting = false)
+        {
+            if (newWidth < this.MinWidth)
+            {
+                newWidth = this.MinWidth;
+            }
+            else if (newWidth > this.MaxWidth)
+            {
+                newWidth = this.MaxWidth;
+            }
+
+            if (this._width != newWidth)
+            {
+                this._width = newWidth;
+
+                if (withChangeCommandExecuting)
+                {
+                    this._commands.ResizeCommand.Execute(null);
+                }
+
+                this.RaisePropertyChanged(() => this.Width);
+            }
+        }
+
         private void ChangeBrightnessCommandOnCanExecuteChanged(object sender, EventArgs eventArgs)
         {
             this.RaisePropertyChanged(() => this.CanChangeBrightness);
@@ -299,12 +415,18 @@
             this.RaisePropertyChanged(() => this.CanChangeRotationAngle);
         }
 
+        private void ResizeCommandOnCanExecuteChanged(object sender, EventArgs eventArgs)
+        {
+            this.RaisePropertyChanged(() => this.CanResize);
+        }
+
         private void SubscribeToCommandsCanExecuteChanged()
         {
             this._commands.ChangeBrightnessCommand.CanExecuteChanged += this.ChangeBrightnessCommandOnCanExecuteChanged;
             this._commands.ChangeContrastCommand.CanExecuteChanged += this.ChangeContrastCommandOnCanExecuteChanged;
             this._commands.ChangeOpacityCommand.CanExecuteChanged += this.ChangeOpacityCommandOnCanExecuteChanged;
             this._commands.ChangeRotationAngleCommand.CanExecuteChanged += this.ChangeRotationAngleCommandOnCanExecuteChanged;
+            this._commands.ResizeCommand.CanExecuteChanged += this.ResizeCommandOnCanExecuteChanged;
         }
     }
 }

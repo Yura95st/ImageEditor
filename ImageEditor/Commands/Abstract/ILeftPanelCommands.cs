@@ -23,5 +23,10 @@
         {
             get;
         }
+
+        ICommand ResizeCommand
+        {
+            get;
+        }
     }
 }

@@ -22,6 +22,12 @@
             set;
         }
 
+        public int Height
+        {
+            get;
+            set;
+        }
+
         public int Opacity
         {
             get;
@@ -29,6 +35,12 @@
         }
 
         public int RotationAngle
+        {
+            get;
+            set;
+        }
+
+        public int Width
         {
             get;
             set;

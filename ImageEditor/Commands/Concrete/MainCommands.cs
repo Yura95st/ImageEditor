@@ -34,6 +34,8 @@
 
         private ICommand _resetScaleValueToDefaultCommand;
 
+        private ICommand _resizeCommand;
+
         private ICommand _saveAsCommand;
 
         private ICommand _saveCommand;
@@ -157,6 +159,19 @@
                 }
 
                 return this._changeRotationAngleCommand;
+            }
+        }
+
+        public ICommand ResizeCommand
+        {
+            get
+            {
+                if (this._resizeCommand == null)
+                {
+                    this._resizeCommand = new RelayCommand(this._viewModel.Resize, this._viewModel.CanResize);
+                }
+
+                return this._resizeCommand;
             }
         }
 

@@ -98,6 +98,18 @@
             return result;
         }
 
+        public BitmapSource Resize(BitmapSource image, int newWidth, int newHeight)
+        {
+            Guard.NotNull(image, "image");
+            Guard.GreaterThanZero(newWidth, "newWidth");
+            Guard.GreaterThanZero(newHeight, "newHeight");
+
+            TransformedBitmap transformedBitmap = new TransformedBitmap(image,
+                new ScaleTransform((double)newWidth / image.PixelWidth, (double)newHeight / image.PixelHeight));
+
+            return transformedBitmap;
+        }
+
         public BitmapSource Rotate(BitmapSource image, int angle)
         {
             Guard.NotNull(image, "image");
@@ -113,7 +125,8 @@
 
             if (angle == -180 || angle == -90 || angle == 0 || angle == 90 || angle == 180)
             {
-                result = ImageProcessor.RotateOrthogonal(image, angle);
+                // Orthogonal rotation
+                result = new TransformedBitmap(image, new RotateTransform(-angle));
             }
             else
             {
@@ -344,20 +357,6 @@
                 image.Palette, newImage, newStride);
 
             return result;
-        }
-
-        private static BitmapSource RotateOrthogonal(BitmapSource image, int angle)
-        {
-            TransformedBitmap transformedBitmap = new TransformedBitmap();
-
-            transformedBitmap.BeginInit();
-
-            transformedBitmap.Source = image;
-            transformedBitmap.Transform = new RotateTransform(-angle);
-
-            transformedBitmap.EndInit();
-
-            return transformedBitmap;
         }
 
         private static Point RotatePoint(Point pointToRotate, Point rotationCenterPoint, double angle)
