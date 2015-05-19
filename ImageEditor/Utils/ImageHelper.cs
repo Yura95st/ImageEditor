@@ -17,6 +17,7 @@
 
             bitmapImage.UriSource = new Uri(filePath, UriKind.Absolute);
             bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+            bitmapImage.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
 
             bitmapImage.EndInit();
 

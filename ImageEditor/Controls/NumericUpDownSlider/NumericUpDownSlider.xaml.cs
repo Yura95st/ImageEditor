@@ -19,9 +19,26 @@
         public static DependencyProperty ValueProperty = DependencyProperty.Register("Value", typeof(double),
         typeof(NumericUpDownSlider), new PropertyMetadata(0.0, NumericUpDownSlider.ValueChangedCallback));
 
+        private bool _showSlider;
+
         public NumericUpDownSlider()
         {
             this.InitializeComponent();
+
+            this._showSlider = true;
+        }
+
+        public bool ShowSlider
+        {
+            set
+            {
+                if (this._showSlider != value)
+                {
+                    this._showSlider = value;
+
+                    this.Slider.Visibility = this._showSlider ? Visibility.Visible : Visibility.Collapsed;
+                }
+            }
         }
 
         public double Maximum
