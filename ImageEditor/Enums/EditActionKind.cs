@@ -16,6 +16,8 @@
 
         Resize = 6,
 
-        Rotate = 7
+        Rotate = 7,
+
+        Drag = 8
     }
 }

@@ -20,6 +20,10 @@
 
         private BitmapSource _image;
 
+        private Point _imageLocation;
+
+        private Point _realImageLocation;
+
         public EditorViewModel(IEditorCommands commands)
         {
             Guard.NotNull(commands, "commands");
@@ -36,6 +40,10 @@
             this.ImageWidth = 0;
 
             this.ImageScaleRatio = 1;
+
+            this._croppingRect = new Rect();
+            this._imageLocation = new Point();
+            this._realImageLocation = new Point();
 
             this.PropertyChanged += this.OnPropertyChanged;
         }
@@ -117,6 +125,7 @@
 
                     this.UpdateImageHeightAndWidth();
                     this.UpdateCroppingRect();
+                    this.ImageLocation = new Point();
 
                     this.RaisePropertyChanged(() => this.Image);
                 }
@@ -127,6 +136,28 @@
         {
             get;
             private set;
+        }
+
+        public Point ImageLocation
+        {
+            get
+            {
+                return this._imageLocation;
+            }
+            set
+            {
+                if (this._imageLocation != value)
+                {
+                    this._imageLocation = value;
+
+                    double ratio = 1 / this.ImageScaleRatio;
+
+                    this._realImageLocation.X = this._imageLocation.X * ratio;
+                    this._realImageLocation.Y = this._imageLocation.Y * ratio;
+
+                    this.RaisePropertyChanged(() => this.ImageLocation);
+                }
+            }
         }
 
         public double ImageScaleRatio
@@ -160,6 +191,7 @@
 
             this.UpdateBackgroundImageHeightAndWidth();
             this.UpdateImageHeightAndWidth();
+            this.UpdateImageLocation();
         }
 
         private static double GetScaledImageHeight(BitmapSource image, double imageScaleRatio)
@@ -251,6 +283,21 @@
                 this.ImageWidth = newImageWidth;
 
                 this.RaisePropertyChanged(() => this.ImageWidth);
+            }
+        }
+
+        private void UpdateImageLocation()
+        {
+            Point newImageLocation = this._imageLocation;
+
+            newImageLocation.X = this._realImageLocation.X * this.ImageScaleRatio;
+            newImageLocation.Y = this._realImageLocation.Y * this.ImageScaleRatio;
+
+            if (!this._imageLocation.Equals(newImageLocation))
+            {
+                this._imageLocation = newImageLocation;
+
+                this.RaisePropertyChanged(() => this.ImageLocation);
             }
         }
     }

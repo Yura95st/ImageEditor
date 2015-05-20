@@ -16,13 +16,13 @@
                       PreviewMouseWheel="ScrollViewer_OnPreviewMouseWheel"
                       VerticalScrollBarVisibility="Visible">
 
-            <Grid Width="{Binding Path=BackgroundLayerWidth,
-                                  Mode=OneWay}"
-                  Height="{Binding Path=BackgroundLayerHeight,
-                                   Mode=OneWay}"
-                  Margin="30,30"
-                  Background="{StaticResource EditorImageGridBackgroundBrush}"
-                  Focusable="False">
+            <Canvas Width="{Binding Path=BackgroundLayerWidth,
+                                    Mode=OneWay}"
+                    Height="{Binding Path=BackgroundLayerHeight,
+                                     Mode=OneWay}"
+                    Margin="30,30"
+                    Background="{StaticResource EditorImageGridBackgroundBrush}"
+                    Focusable="False">
 
                 <Image Width="{Binding Path=BackgroundImageWidth,
                                        Mode=OneWay}"
@@ -34,20 +34,47 @@
                                         Mode=OneWay}"
                        Stretch="Fill" />
 
-                <Image x:Name="Image"
+                <Thumb x:Name="ImageThumb"
+                       Canvas.Left="{Binding Path=ImageLocation.X,
+                                             Mode=OneWay}"
+                       Canvas.Top="{Binding Path=ImageLocation.Y,
+                                            Mode=OneWay}"
                        Width="{Binding Path=ImageWidth,
                                        Mode=OneWay}"
                        Height="{Binding Path=ImageHeight,
                                         Mode=OneWay}"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center"
+                       Panel.ZIndex="1"
+                       DragCompleted="ImageThumb_OnDragCompleted"
+                       DragDelta="ImageThumb_DragDelta"
                        Focusable="True"
-                       LostFocus="Image_OnLostFocus"
-                       PreviewKeyDown="Image_OnPreviewKeyDown"
-                       Source="{Binding Path=Image,
-                                        Mode=OneWay}"
-                       Stretch="Fill" />
-            </Grid>
+                       IsEnabled="True"
+                       LostFocus="ImageThumb_OnLostFocus"
+                       PreviewKeyDown="ImageThumb_OnPreviewKeyDown"
+                       Tag="{Binding Path=DataContext,
+                                     RelativeSource={RelativeSource Self}}">
+                    <Thumb.Style>
+                        <Style TargetType="{x:Type Thumb}">
+                            <Style.Triggers>
+                                <Trigger Property="IsDragging" Value="True">
+                                    <Setter Property="Cursor" Value="SizeAll" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Thumb.Style>
+
+                    <Thumb.Template>
+                        <ControlTemplate TargetType="{x:Type Thumb}">
+                            <Grid>
+                                <Image HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       Source="{Binding Path=Image,
+                                                        Mode=OneWay}"
+                                       Stretch="Fill" />
+                            </Grid>
+                        </ControlTemplate>
+                    </Thumb.Template>
+                </Thumb>
+            </Canvas>
 
         </ScrollViewer>
     </Border>

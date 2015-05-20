@@ -1,5 +1,6 @@
 ﻿namespace ImageEditor.Commands.Concrete
 {
+    using System.Windows;
     using System.Windows.Input;
 
     using GalaSoft.MvvmLight.CommandWpf;
@@ -21,6 +22,8 @@
         private ICommand _changeRotationAngleCommand;
 
         private ICommand _cropCommand;
+
+        private ICommand _dragCommand;
 
         private ICommand _increaseScaleValueCommand;
 
@@ -63,6 +66,19 @@
                 }
 
                 return this._cropCommand;
+            }
+        }
+
+        public ICommand DragCommand
+        {
+            get
+            {
+                if (this._dragCommand == null)
+                {
+                    this._dragCommand = new RelayCommand<Point>(this._viewModel.Drag, this._viewModel.CanDrag);
+                }
+
+                return this._dragCommand;
             }
         }
 

@@ -125,6 +125,21 @@
             return this.IsImageOpened();
         }
 
+        public bool CanDrag(Point newLocation)
+        {
+            if (!this.IsImageOpened())
+            {
+                return false;
+            }
+
+            Rect imageRect = new Rect(newLocation,
+                new Size(this.EditorViewModel.ImageWidth, this.EditorViewModel.ImageHeight));
+            Rect fieldRect =
+                new Rect(new Size(this.EditorViewModel.BackgroundLayerWidth, this.EditorViewModel.BackgroundLayerHeight));
+
+            return imageRect.IntersectsWith(fieldRect);
+        }
+
         public bool CanRedo()
         {
             return this._undoRedoService.CanRedo();
@@ -180,6 +195,13 @@
             this.PerformEditActionWithKind(EditActionKind.Crop);
 
             Messenger.Default.Send(new HideCroppingRectangleMessage(this));
+        }
+
+        public void Drag(Point newLocation)
+        {
+            this.EditorViewModel.ImageLocation = newLocation;
+
+            this.PerformEditActionWithKind(EditActionKind.Drag);
         }
 
         public void IncreaseScaleValue()
@@ -481,10 +503,14 @@
         {
             EditAction editAction = new EditAction(editActionKind, this.GenerateImageConfiguration());
 
-            //BitmapSource imageToEdit = this.GenerateImageToEdit(editAction, this._undoRedoService.GetLastEntry());
-            BitmapSource imageToEdit = this._originalImage;
+            if (editActionKind != EditActionKind.Drag)
+            {
+                //BitmapSource imageToEdit = this.GenerateImageToEdit(editAction, this._undoRedoService.GetLastEntry());
 
-            this.EditImage(imageToEdit, editAction);
+                BitmapSource imageToEdit = this._originalImage;
+
+                this.EditImage(imageToEdit, editAction);
+            }
 
             //this._undoRedoService.AddEntry(editAction);
         }

@@ -2,6 +2,7 @@
 {
     using System.Windows;
     using System.Windows.Controls;
+    using System.Windows.Controls.Primitives;
     using System.Windows.Documents;
     using System.Windows.Input;
     using System.Windows.Media;
@@ -49,12 +50,53 @@
             adornerLayer.Add(this._croppingAdorner);
         }
 
-        private void Image_OnLostFocus(object sender, RoutedEventArgs e)
+        private void ImageThumb_DragDelta(object sender, DragDeltaEventArgs e)
         {
-            this.RemoveCroppingAdornerFromElement(this.Image);
+            EditorViewModel viewModel = this.ImageThumb.DataContext as EditorViewModel;
+
+            if (viewModel != null)
+            {
+                Point newImageLocation = viewModel.ImageLocation;
+
+                if ((Keyboard.Modifiers & ModifierKeys.Shift) > 0)
+                {
+                    if ((Keyboard.Modifiers & ModifierKeys.Control) > 0)
+                    {
+                        newImageLocation.Offset(0, e.VerticalChange);
+                    }
+                    else
+                    {
+                        newImageLocation.Offset(e.HorizontalChange, 0);
+                    }
+                }
+                else
+                {
+                    newImageLocation.Offset(e.HorizontalChange, e.VerticalChange);
+                }
+
+                if (viewModel.Commands.DragCommand.CanExecute(newImageLocation))
+                {
+                    viewModel.ImageLocation = newImageLocation;
+                }
+            }
         }
 
-        private void Image_OnPreviewKeyDown(object sender, KeyEventArgs e)
+        private void ImageThumb_OnDragCompleted(object sender, DragCompletedEventArgs e)
+        {
+            EditorViewModel viewModel = this.ImageThumb.DataContext as EditorViewModel;
+
+            if (viewModel != null)
+            {
+                viewModel.Commands.DragCommand.Execute(viewModel.ImageLocation);
+            }
+        }
+
+        private void ImageThumb_OnLostFocus(object sender, RoutedEventArgs e)
+        {
+            this.RemoveCroppingAdornerFromElement(this.ImageThumb);
+        }
+
+        private void ImageThumb_OnPreviewKeyDown(object sender, KeyEventArgs e)
         {
             if (this._croppingAdorner != null)
             {
@@ -62,11 +104,11 @@
                 {
                     case Key.Enter:
                     {
-                        Image image = sender as Image;
+                        Thumb thumb = sender as Thumb;
 
-                        if (image != null)
+                        if (thumb != null)
                         {
-                            EditorViewModel viewModel = image.DataContext as EditorViewModel;
+                            EditorViewModel viewModel = thumb.DataContext as EditorViewModel;
 
                             if (viewModel != null)
                             {
@@ -79,7 +121,7 @@
 
                     case Key.Escape:
                     {
-                        this.RemoveCroppingAdornerFromElement(this.Image);
+                        this.RemoveCroppingAdornerFromElement(this.ImageThumb);
 
                         break;
                     }
@@ -102,7 +144,7 @@
 
         private void OnHideCroppingRectangle(HideCroppingRectangleMessage obj)
         {
-            this.RemoveCroppingAdornerFromElement(this.Image);
+            this.RemoveCroppingAdornerFromElement(this.ImageThumb);
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)
@@ -112,9 +154,9 @@
 
         private void OnShowCroppingRectangle(ShowCroppingRectangleMessage message)
         {
-            this.AddCroppingAdornerToElement(this.Image);
+            this.AddCroppingAdornerToElement(this.ImageThumb);
 
-            this.Image.Focus();
+            this.ImageThumb.Focus();
         }
 
         private void RemoveCroppingAdornerFromElement(FrameworkElement frameworkElement)

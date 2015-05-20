@@ -82,7 +82,7 @@
                                    Grid.Column="0"
                                    Margin="0,0,20,10"
                                    VerticalAlignment="Center"
-                                   Text="Width" />
+                                   Text="Width:" />
 
                         <numericUpDownSlider:NumericUpDownSlider Grid.Row="0"
                                                                  Grid.Column="1"
@@ -102,7 +102,7 @@
                                    Grid.Column="0"
                                    Margin="0,0,20,10"
                                    VerticalAlignment="Center"
-                                   Text="Height" />
+                                   Text="Height:" />
 
                         <numericUpDownSlider:NumericUpDownSlider Grid.Row="1"
                                                                  Grid.Column="1"

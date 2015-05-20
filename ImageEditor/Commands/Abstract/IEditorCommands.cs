@@ -9,6 +9,11 @@
             get;
         }
 
+        ICommand DragCommand
+        {
+            get;
+        }
+
         ICommand IncreaseScaleValueCommand
         {
             get;
