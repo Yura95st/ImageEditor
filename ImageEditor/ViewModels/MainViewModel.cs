@@ -520,6 +520,7 @@
             this._editingImage = null;
 
             this.LeftPanelViewModel.ResetToDefaults();
+            this.EditorViewModel.Reset();
 
             this._undoRedoService.Clear();
         }

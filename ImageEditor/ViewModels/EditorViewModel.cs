@@ -41,9 +41,7 @@
 
             this.ImageScaleRatio = 1;
 
-            this._croppingRect = new Rect();
-            this._imageLocation = new Point();
-            this._realImageLocation = new Point();
+            this.Reset();
 
             this.PropertyChanged += this.OnPropertyChanged;
         }
@@ -61,6 +59,8 @@
                     this._backgroundImage = value;
 
                     this.UpdateBackgroundImageHeightAndWidth();
+
+                    this.ResetImageLocation();
 
                     this.RaisePropertyChanged(() => this.BackgroundImage);
                 }
@@ -125,7 +125,6 @@
 
                     this.UpdateImageHeightAndWidth();
                     this.UpdateCroppingRect();
-                    this.ImageLocation = new Point();
 
                     this.RaisePropertyChanged(() => this.Image);
                 }
@@ -170,6 +169,13 @@
         {
             get;
             private set;
+        }
+
+        public void Reset()
+        {
+            this.ResetCroppingRect();
+
+            this.ResetImageLocation();
         }
 
         public void SetCroppingRect(Rect croppingRect)
@@ -230,6 +236,16 @@
             {
                 this.RaisePropertyChanged(() => this.BackgroundLayerWidth);
             }
+        }
+
+        private void ResetCroppingRect()
+        {
+            this._croppingRect = new Rect();
+        }
+
+        private void ResetImageLocation()
+        {
+            this.ImageLocation = new Point();
         }
 
         private void UpdateBackgroundImageHeightAndWidth()
