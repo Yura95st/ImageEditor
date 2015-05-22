@@ -122,7 +122,9 @@
 
         public bool CanCrop()
         {
-            return this.IsImageOpened();
+            bool result = this.IsImageOpened() && this.EditorViewModel.CroppingRect.Width >= 1 && this.EditorViewModel.CroppingRect.Height >= 1;
+
+            return result;
         }
 
         public bool CanDrag(Point newLocation)
