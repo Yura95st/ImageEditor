@@ -122,9 +122,26 @@
 
         public bool CanCrop()
         {
-            bool result = this.IsImageOpened() && this.EditorViewModel.CroppingRect.Width >= 1 && this.EditorViewModel.CroppingRect.Height >= 1;
+            bool result = this.IsImageOpened() && this.EditorViewModel.CroppingRect.Width >= 1
+                && this.EditorViewModel.CroppingRect.Height >= 1;
 
             return result;
+        }
+
+        public bool CanCropBackgroundByImage()
+        {
+            if (!this.IsImageOpened() || this.EditorViewModel.BackgroundImage == null)
+            {
+                return false;
+            }
+
+            Rect fieldRect =
+                new Rect(new Size(this.EditorViewModel.BackgroundLayerWidth, this.EditorViewModel.BackgroundLayerHeight));
+
+            Rect imageRect = new Rect(this.EditorViewModel.ImageLocation,
+                new Size(this.EditorViewModel.ImageWidth, this.EditorViewModel.ImageHeight));
+
+            return fieldRect.Contains(imageRect);
         }
 
         public bool CanDrag(Point newLocation)
@@ -136,6 +153,7 @@
 
             Rect imageRect = new Rect(newLocation,
                 new Size(this.EditorViewModel.ImageWidth, this.EditorViewModel.ImageHeight));
+
             Rect fieldRect =
                 new Rect(new Size(this.EditorViewModel.BackgroundLayerWidth, this.EditorViewModel.BackgroundLayerHeight));
 
@@ -197,6 +215,32 @@
             this.PerformEditActionWithKind(EditActionKind.Crop);
 
             Messenger.Default.Send(new HideCroppingRectangleMessage(this));
+        }
+
+        public void CropBackgroundByImage()
+        {
+            // Crop background by the rotated image
+            Rect croppingRectangle = new Rect(this.EditorViewModel.RealImageLocation,
+                new Size(this.EditorViewModel.Image.PixelWidth, this.EditorViewModel.Image.PixelHeight));
+
+            BitmapSource newBackgroundImage = this._imageProcessor.Crop(this.EditorViewModel.BackgroundImage,
+                croppingRectangle);
+
+            // Rotate both images to default angle
+            newBackgroundImage = this._imageProcessor.Rotate(newBackgroundImage, -this.LeftPanelViewModel.RotationAngle,
+                false);
+            this.LeftPanelViewModel.RotationAngle = ImageProcessor.DefaultRotationAngle;
+
+            // Crop background by image, that is rotated to default angle
+            croppingRectangle =
+                new Rect(
+                    new Point((newBackgroundImage.PixelWidth - this.EditorViewModel.Image.PixelWidth) / 2.0,
+                        (newBackgroundImage.PixelHeight - this.EditorViewModel.Image.PixelHeight) / 2.0),
+                    new Size(this.EditorViewModel.Image.PixelWidth, this.EditorViewModel.Image.PixelHeight));
+
+            newBackgroundImage = this._imageProcessor.Crop(newBackgroundImage, croppingRectangle);
+
+            this.EditorViewModel.BackgroundImage = newBackgroundImage;
         }
 
         public void Drag(Point newLocation)
@@ -462,7 +506,8 @@
                     if (editAction.Kind != EditActionKind.Rotate
                         && editAction.ImageConfiguration.RotationAngle != ImageProcessor.DefaultRotationAngle)
                     {
-                        bitmapSource = this._imageProcessor.Rotate(bitmapSource, editAction.ImageConfiguration.RotationAngle, true);
+                        bitmapSource = this._imageProcessor.Rotate(bitmapSource, editAction.ImageConfiguration.RotationAngle,
+                            true);
                     }
 
                     if (editAction.Kind != EditActionKind.Crop)

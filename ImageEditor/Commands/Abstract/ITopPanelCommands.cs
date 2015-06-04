@@ -4,6 +4,11 @@
 
     public interface ITopPanelCommands
     {
+        ICommand CropBackgroundByImageCommand
+        {
+            get;
+        }
+
         ICommand OpenBackgroundCommand
         {
             get;

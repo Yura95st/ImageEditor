@@ -171,6 +171,14 @@
             private set;
         }
 
+        public Point RealImageLocation
+        {
+            get
+            {
+                return this._realImageLocation;
+            }
+        }
+
         public void Reset()
         {
             this.ResetCroppingRect();

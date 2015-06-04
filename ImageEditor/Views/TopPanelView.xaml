@@ -54,6 +54,13 @@
                         Content="Crop"
                         Style="{StaticResource CropTopPanelButton}"
                         ToolTip="Crop" />
+
+                <Border Style="{StaticResource TopPanelDivider}" />
+
+                <Button Command="{Binding Commands.CropBackgroundByImageCommand}"
+                        Content="Crop Background By Image"
+                        Style="{StaticResource CropTopPanelButton}"
+                        ToolTip="Crop Background By Image" />
             </StackPanel>
         </Grid>
     </Grid>

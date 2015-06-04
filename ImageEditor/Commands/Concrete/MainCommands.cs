@@ -21,6 +21,8 @@
 
         private ICommand _changeRotationAngleCommand;
 
+        private ICommand _cropBackgroundByImageCommand;
+
         private ICommand _cropCommand;
 
         private ICommand _dragCommand;
@@ -188,6 +190,20 @@
                 }
 
                 return this._resizeCommand;
+            }
+        }
+
+        public ICommand CropBackgroundByImageCommand
+        {
+            get
+            {
+                if (this._cropBackgroundByImageCommand == null)
+                {
+                    this._cropBackgroundByImageCommand = new RelayCommand(this._viewModel.CropBackgroundByImage,
+                        this._viewModel.CanCropBackgroundByImage);
+                }
+
+                return this._cropBackgroundByImageCommand;
             }
         }
 
