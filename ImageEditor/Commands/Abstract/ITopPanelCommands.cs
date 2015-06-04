@@ -29,6 +29,11 @@
             get;
         }
 
+        ICommand SaveBackgroundAsCommand
+        {
+            get;
+        }
+
         ICommand SaveCommand
         {
             get;

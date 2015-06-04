@@ -29,6 +29,8 @@
 
         private BitmapSource _editingImage;
 
+        private string _openedBackgroundImageFilePath;
+
         private string _openedImageFilePath;
 
         private BitmapSource _originalImage;
@@ -47,6 +49,7 @@
             this._editingImage = null;
 
             this._openedImageFilePath = null;
+            this._openedBackgroundImageFilePath = null;
 
             this.InitViewModels();
         }
@@ -130,7 +133,7 @@
 
         public bool CanCropBackgroundByImage()
         {
-            if (!this.IsImageOpened() || this.EditorViewModel.BackgroundImage == null)
+            if (!this.IsImageOpened() || !this.IsBackgroundImageOpened())
             {
                 return false;
             }
@@ -178,6 +181,11 @@
         public bool CanSaveAs()
         {
             return this.IsImageOpened();
+        }
+
+        public bool CanSaveBackgroundAs()
+        {
+            return this.IsBackgroundImageOpened();
         }
 
         public bool CanShowCroppingRectangle()
@@ -292,6 +300,8 @@
                 {
                     try
                     {
+                        this._openedBackgroundImageFilePath = imageFilePath;
+
                         this.EditorViewModel.BackgroundImage = ImageHelper.GetBitmapSourceFromFile(imageFilePath);
                     }
                     catch
@@ -348,9 +358,31 @@
                 {
                     try
                     {
-                        ImageHelper.SaveImageToFile(this.EditorViewModel.Image, imageFilePath);
+                        ImageHelper.SaveImageToFile(this.EditorViewModel.BackgroundImage, imageFilePath);
 
                         this.OpenedImageFilePath = imageFilePath;
+                    }
+                    catch
+                    {
+                        Messenger.Default.Send(new ErrorMessage(this,
+                            string.Format("{0}{1}ImageEditor can't save image to the file.", imageFilePath,
+                                Environment.NewLine)));
+                    }
+                });
+
+            Messenger.Default.Send(message);
+        }
+
+        public void SaveBackgroundAs()
+        {
+            SaveAsImageMessage message = new SaveAsImageMessage(this,
+                Path.GetFileNameWithoutExtension(this._openedBackgroundImageFilePath), imageFilePath =>
+                {
+                    try
+                    {
+                        ImageHelper.SaveImageToFile(this.EditorViewModel.BackgroundImage, imageFilePath);
+
+                        this._openedBackgroundImageFilePath = imageFilePath;
                     }
                     catch
                     {
@@ -537,6 +569,13 @@
             this.TopPanelViewModel = new TopPanelViewModel(this._commands);
 
             this.LeftPanelViewModel = new LeftPanelViewModel(this._commands);
+        }
+
+        private bool IsBackgroundImageOpened()
+        {
+            bool result = this.EditorViewModel.BackgroundImage != null;
+
+            return result;
         }
 
         private bool IsImageOpened()

@@ -43,6 +43,8 @@
 
         private ICommand _saveAsCommand;
 
+        private ICommand _saveBackgroundAsCommand;
+
         private ICommand _saveCommand;
 
         private ICommand _showCroppingRectangleCommand;
@@ -256,6 +258,20 @@
                 }
 
                 return this._saveAsCommand;
+            }
+        }
+
+        public ICommand SaveBackgroundAsCommand
+        {
+            get
+            {
+                if (this._saveBackgroundAsCommand == null)
+                {
+                    this._saveBackgroundAsCommand = new RelayCommand(this._viewModel.SaveBackgroundAs,
+                        this._viewModel.CanSaveBackgroundAs);
+                }
+
+                return this._saveBackgroundAsCommand;
             }
         }
 

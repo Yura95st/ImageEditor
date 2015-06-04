@@ -26,6 +26,8 @@
                         Style="{StaticResource OpenTopPanelButton}"
                         ToolTip="Open Background (Ctrl+Shift+O)" />
 
+                <Border Style="{StaticResource TopPanelDivider}" />
+
                 <Button Command="{Binding Commands.SaveCommand}"
                         Content="Save"
                         Style="{StaticResource SaveTopPanelButton}"
@@ -35,6 +37,11 @@
                         Content="Save As"
                         Style="{StaticResource SaveAsTopPanelButton}"
                         ToolTip="Save As (Ctrl+Shift+S)" />
+
+                <Button Command="{Binding Commands.SaveBackgroundAsCommand}"
+                        Content="Save Background As"
+                        Style="{StaticResource SaveAsTopPanelButton}"
+                        ToolTip="Save Background As" />
 
                 <Border Style="{StaticResource TopPanelDivider}" />
 
