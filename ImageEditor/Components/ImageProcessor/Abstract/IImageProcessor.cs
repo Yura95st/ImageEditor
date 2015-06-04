@@ -39,7 +39,11 @@
         /// <summary>Rotates the specified image to the specified angle.</summary>
         /// <param name="image">The image.</param>
         /// <param name="angle">The rotation angle.</param>
+        /// <param name="adjustImageSize">
+        ///     If set to <c>true</c> - adjust width and height of the result to fit the whole rotated
+        ///     image.
+        /// </param>
         /// <returns>The rotated image.</returns>
-        BitmapSource Rotate(BitmapSource image, int angle);
+        BitmapSource Rotate(BitmapSource image, int angle, bool adjustImageSize);
     }
 }

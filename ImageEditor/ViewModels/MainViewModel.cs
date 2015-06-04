@@ -371,7 +371,7 @@
                 case EditActionKind.Rotate:
                 {
                     this.EditorViewModel.Image = this._imageProcessor.Rotate(imageToEdit,
-                        editAction.ImageConfiguration.RotationAngle);
+                        editAction.ImageConfiguration.RotationAngle, true);
                     break;
                 }
 
@@ -462,7 +462,7 @@
                     if (editAction.Kind != EditActionKind.Rotate
                         && editAction.ImageConfiguration.RotationAngle != ImageProcessor.DefaultRotationAngle)
                     {
-                        bitmapSource = this._imageProcessor.Rotate(bitmapSource, editAction.ImageConfiguration.RotationAngle);
+                        bitmapSource = this._imageProcessor.Rotate(bitmapSource, editAction.ImageConfiguration.RotationAngle, true);
                     }
 
                     if (editAction.Kind != EditActionKind.Crop)

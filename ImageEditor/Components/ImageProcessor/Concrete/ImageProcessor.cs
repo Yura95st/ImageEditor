@@ -110,7 +110,7 @@
             return transformedBitmap;
         }
 
-        public BitmapSource Rotate(BitmapSource image, int angle)
+        public BitmapSource Rotate(BitmapSource image, int angle, bool adjustImageSize)
         {
             Guard.NotNull(image, "image");
 
@@ -130,7 +130,7 @@
             }
             else
             {
-                result = ImageProcessor.RotateOnAnyAngle(image, angle);
+                result = ImageProcessor.RotateOnAnyAngle(image, angle, adjustImageSize);
             }
 
             return result;
@@ -272,7 +272,7 @@
             return index;
         }
 
-        private static BitmapSource RotateOnAnyAngle(BitmapSource image, int angle)
+        private static BitmapSource RotateOnAnyAngle(BitmapSource image, int angle, bool adjustImageSize)
         {
             int oldWidth = image.PixelWidth;
             int oldHeight = image.PixelHeight;
@@ -297,16 +297,27 @@
             Point newTopLeftPoint = ImageProcessor.RotatePoint(topLeftPoint, rotationCenterPoint, angleInRadian);
             Point newBottomLeftPoint = ImageProcessor.RotatePoint(bottomLeftPoint, rotationCenterPoint, angleInRadian);
 
-            // Calculate newWidth and newHeight values
-            int newWidth =
-                (int)
-                    Math.Max(Math.Abs(newTopLeftPoint.X - rotationCenterPoint.X),
-                        Math.Abs(newBottomLeftPoint.X - rotationCenterPoint.X)) * 2;
+            int newWidth;
+            int newHeight;
 
-            int newHeight =
-                (int)
-                    Math.Max(Math.Abs(newTopLeftPoint.Y - rotationCenterPoint.Y),
-                        Math.Abs(newBottomLeftPoint.Y - rotationCenterPoint.Y)) * 2;
+            if (adjustImageSize)
+            {
+                // Calculate newWidth and newHeight values
+                newWidth =
+                    (int)
+                        Math.Max(Math.Abs(newTopLeftPoint.X - rotationCenterPoint.X),
+                            Math.Abs(newBottomLeftPoint.X - rotationCenterPoint.X)) * 2;
+
+                newHeight =
+                    (int)
+                        Math.Max(Math.Abs(newTopLeftPoint.Y - rotationCenterPoint.Y),
+                            Math.Abs(newBottomLeftPoint.Y - rotationCenterPoint.Y)) * 2;
+            }
+            else
+            {
+                newWidth = oldWidth;
+                newHeight = oldHeight;
+            }
 
             int newStride = (newWidth * bitsPerPixel + 7) / 8;
 
